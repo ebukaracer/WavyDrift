@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd862a7ff17e8e498018dba87fb25ed, type: 3}
+  m_Name: Player_3
+  m_EditorClassIdentifier: 
+  id: 3
+  title: 3
+  description: Jet-propelled plane with amazing flight simulation.
+  icon: {fileID: 21300000, guid: 67c08a014f319fb4ba8aa884ba9c4ee4, type: 3}
+  unlockTokenIcon: {fileID: 21300000, guid: b75b3b69186d76c40a06cfd7adc71c08, type: 3}
+  <UnlockTokenName>k__BackingField: 1
+  tokenAmount: 50
+  <DesiredBest>k__BackingField: 300
+  <CollectibleNameToUnlock>k__BackingField: 1
+  <IsPurchased>k__BackingField: 0
+  <IsUsing>k__BackingField: 0
+  <PlayerPrefab>k__BackingField: {fileID: 6549452611361584427, guid: 6dd5620ffd5a111498bf5fd3d27df82d,
+    type: 3}
+  <BrokenPlayerPrefab>k__BackingField: {fileID: 3925072077773709559, guid: 86392819fe2b6b34b8e82570d1a3ac27,
+    type: 3}

@@ -1,0 +1,21 @@
+{
+  "_keyValues": {
+    "Using_Wavyball": false,
+    "TotalCoins": 1038,
+    "BestScore": 500,
+    "Diamond": 759,
+    "Unlocked_Jet": true,
+    "Coin_Magnet_Level": 5,
+    "Coin_Magnet_LevelPrice": 20,
+    "Coin_Magnet_ResourceValue": 17,
+    "Unlocked_Jetpackboy": true,
+    "Using_Jetpackboy": true,
+    "Using_Umbrella": false,
+    "Using_Kite": false,
+    "Using_Jet": false,
+    "Ghost_Portion_Level": 5,
+    "Ghost_Portion_LevelPrice": 25,
+    "Ghost_Portion_ResourceValue": 25,
+    "Ghost_Portion_IsUpgradable": false
+  }
+}
