@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e0b52a0348b288458ae0771390ac75b, type: 3}
+  m_Name: Collectible_3
+  m_EditorClassIdentifier: 
+  id: 2
+  title: 2
+  description: 'Serves as a shield against platforms.
+
+    Upgrade to increase elapse
+    time.'
+  <LevelPrice>k__BackingField: 5
+  levelPriceCache: 5
+  perLevelPrice: 5
+  <LevelIndex>k__BackingField: 1
+  maxLevelIndex: 5
+  perResourceValue: 5
+  <ResourceValue>k__BackingField: 5
+  resourceValueCache: 5
+  <IsUnlocked>k__BackingField: 0
+  <IsUpgradable>k__BackingField: 1
+  isUpgradableCache: 1
