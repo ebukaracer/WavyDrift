@@ -1,14 +1,14 @@
-﻿using Racer.Utilities;
+﻿using System;
+using Racer.Utilities;
 using UnityEngine;
 
 /// <summary>
 /// Retrieves a <see cref="FillBar"/> reference.
 /// See also: <seealso cref="FillBar"/>
 /// </summary>
-public class FillController : SingletonPattern.Singleton<FillController>
+internal class FillController : SingletonPattern.Singleton<FillController>
 {
-    [SerializeField]
-    CameraController cameraController;
+    [SerializeField] private CameraController cameraController;
 
     // UI Fill-Bars available
     [field: SerializeField, Space(10)]
@@ -30,9 +30,9 @@ public class FillController : SingletonPattern.Singleton<FillController>
 
         var item = ItemManager.Instance.CollectibleItem;
 
-        CoinMagnetFill.DecreaseTime = item.GetItemByName(CollectibleName.Coin_Magnet).ResourceValue;
+        CoinMagnetFill.DecreaseTime = item.GetItemByName(CollectibleName.CoinMagnet).ResourceValue;
 
-        GhostFill.DecreaseTime = item.GetItemByName(CollectibleName.Ghost_Portion).ResourceValue;
+        GhostFill.DecreaseTime = item.GetItemByName(CollectibleName.GhostPortion).ResourceValue;
     }
 
     private void Start()
@@ -51,5 +51,12 @@ public class FillController : SingletonPattern.Singleton<FillController>
     private void DangerDecreaseFinished()
     {
         cameraController.FlipRotation();
+    }
+
+    private void OnDisable()
+    {
+        DangerFill.OnDecreaseStarted -= DangerDecreaseStarted;
+
+        DangerFill.OnDecreaseFinished -= DangerDecreaseFinished;
     }
 }

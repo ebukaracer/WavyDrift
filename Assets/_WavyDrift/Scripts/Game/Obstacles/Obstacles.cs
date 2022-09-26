@@ -1,6 +1,3 @@
 ﻿using UnityEngine;
 
-public class Obstacles : MonoBehaviour
-{
-  
-}
+internal class Obstacles : MonoBehaviour { }

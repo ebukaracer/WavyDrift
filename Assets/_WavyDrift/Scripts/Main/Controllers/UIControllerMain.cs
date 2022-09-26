@@ -1,18 +1,16 @@
 using Racer.LoadManager;
 using Racer.SaveManager;
 using Racer.SaveSystem;
-using Racer.SoundManager;
 using Racer.Utilities;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// Handles certain stuffs relating to the game's main-menu UI.
 /// </summary>
-public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
+internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
 {
-    public UITweens UITweens { get; private set; }
+    public UITween UITween { get; private set; }
 
     public int CoinsCount { get; private set; }
 
@@ -20,72 +18,41 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
 
     public int BestCount { get; private set; }
 
-    bool hasValidatedUser;
-
-    // Sound
-    bool inverseSoundState;
-    bool isSoundStateInit;
-
-    // Vibration
-    bool inverseVibrationState;
-    bool isVibrationStateInit;
+    private bool _hasValidatedUser;
 
     [Header("Texts")]
 
-    [SerializeField]
-    TextMeshProUGUI coinT;
+    [SerializeField] private TextMeshProUGUI coinT;
 
-    [SerializeField]
-    TextMeshProUGUI diamondT;
+    [SerializeField] private TextMeshProUGUI diamondT;
 
-    [SerializeField]
-    TextMeshProUGUI bestT;
+    [SerializeField] private TextMeshProUGUI bestT;
 
-    [SerializeField]
-    TextMeshProUGUI infoTipT;
+    [SerializeField] private TextMeshProUGUI infoTipT;
 
-    [Header("Images")]
-
-    [Space(10), SerializeField]
-    Image musicBtnSprite;
-
-    [SerializeField]
-    Image vibrationBtnSprite;
-
-    [Header("Sprites")]
-
-    [Space(5), SerializeField]
-    Sprite[] musicBtnSprites;
-
-    [SerializeField]
-    Sprite[] vibrationBtnSprites;
 
     protected override void Awake()
     {
         base.Awake();
 
-        UITweens = GetComponent<UITweens>();
+        UITween = GetComponent<UITween>();
 
-        hasValidatedUser = SaveManager.GetBool("Validated");
+        _hasValidatedUser = SaveManager.GetBool("Validated");
 
         Init();
-
-        SoundAction();
-
-        VibrationAction();
     }
 
     private void Start()
     {
 
-        if (!hasValidatedUser)
+        if (!_hasValidatedUser)
             ShowInfoTip("Hey welcome!\nVisit the help section for a brief overview :-)");
     }
 
     /// <summary>
     /// Retrieves all the saved-in values from save-file.
     /// </summary>
-    void Init()
+    private void Init()
     {
         CoinsCount = SaveSystem.GetData<int>("TotalCoins");
         coinT.SetText("{0}", CoinsCount);
@@ -126,106 +93,17 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
     }
 
     /// <summary>
-    /// Initializes sound state(on/off) upon game start.
-    /// Assigned to the sound button from the scene.
-    /// Toggles mute/Un-mute sound states.
-    /// </summary>
-    public void SoundAction()
-    {
-        // Called once and only if sound hasn't been initialized with the saved in value.
-        if (!isSoundStateInit)
-        {
-            inverseSoundState = SaveManager.GetBool("Sound", true);
-
-            isSoundStateInit = true;
-        }
-
-        // Un-mute
-        if (inverseSoundState)
-        {
-            // Logic
-            SoundManager.Instance.EnableMusic(true);
-            SoundManager.Instance.EnableSfx(true);
-
-            // Save point could be called elsewhere
-            SaveManager.SaveBool("Sound", inverseSoundState);
-
-            musicBtnSprite.sprite = musicBtnSprites[0];
-
-            // Reverse
-            inverseSoundState = false;
-        }
-
-        // Mute
-        else
-        {
-            // Logic
-            SoundManager.Instance.EnableMusic(false);
-            SoundManager.Instance.EnableSfx(false);
-
-            SaveManager.SaveBool("Sound", inverseSoundState);
-
-            musicBtnSprite.sprite = musicBtnSprites[1];
-
-            // Reverse
-            inverseSoundState = true;
-        }
-    }
-
-    /// <summary>
-    /// Similar to <see cref="SoundAction"/>, instead vibration is being taken account of.
-    /// </summary>
-    public void VibrationAction()
-    {
-        // Called once and only if vibration hasn't been initialized with the saved in value.
-        if (!isVibrationStateInit)
-        {
-            inverseVibrationState = SaveManager.GetBool("Vibration", false);
-
-            isVibrationStateInit = true;
-        }
-
-        // Vibration disabled
-        if (inverseVibrationState)
-        {
-            // Logic
-
-            // Save point could be called elsewhere
-            SaveManager.SaveBool("Vibration", inverseVibrationState);
-
-            vibrationBtnSprite.sprite = vibrationBtnSprites[0];
-
-            // Reverse
-            inverseVibrationState = false;
-        }
-
-        // Vibration enabled
-        else
-        {
-            // Logic
-
-            SaveManager.SaveBool("Vibration", inverseVibrationState);
-
-            vibrationBtnSprite.sprite = vibrationBtnSprites[1];
-
-            // Reverse
-            inverseVibrationState = true;
-        }
-    }
-
-    /// <summary>
     /// Called once and only during player's first time lunch of the game.
     /// Prompts player to navigate through a particular
     /// UI-panel before proceeding to play.
     /// </summary>
     public void ValidateUser()
     {
-        if (!hasValidatedUser)
-        {
-            hasValidatedUser = true;
+        if (_hasValidatedUser) return;
 
-            SaveManager.SaveBool("Validated", hasValidatedUser);
-        }
+        _hasValidatedUser = true;
+
+        SaveManager.SaveBool("Validated", _hasValidatedUser);
     }
 
     /// <summary>
@@ -239,7 +117,9 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
         infoTipT.text = textToDisplay;
 
         // Info tip Displayed
-        UITweens.DisplayInfoBar(autoHide);
+        UITween.DisplayInfoBar(autoHide);
+
+        UITween.DisplayInfoBar(autoHide);
     }
 
     /// <summary>
@@ -252,6 +132,11 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
         SaveSystem.DeleteSaveFile();
 
         SaveManager.ClearAllPrefs();
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        // Restarts application when a save-file is deleted, so as to apply changes.
+        RestartAndroid.Restart();
+#endif
     }
 
     /// <summary>
@@ -270,7 +155,7 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
     /// <param name="sceneIndex">Next scene's index.</param>
     public void LoadGame(int sceneIndex)
     {
-        if (hasValidatedUser)
+        if (_hasValidatedUser)
             LoadManager.Instance.LoadSceneAsync(sceneIndex);
         else
             FirstTimeInit("First visit the help section for a brief overview :-(");
@@ -284,5 +169,4 @@ public class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
     {
         ShowInfoTip(t);
     }
-
 }

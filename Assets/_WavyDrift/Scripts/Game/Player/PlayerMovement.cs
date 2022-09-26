@@ -7,20 +7,22 @@ using UnityEngine;
 /// <summary>
 /// Handles player's motion.
 /// </summary>
-public class PlayerMovement : MonoBehaviour
+internal class PlayerMovement : MonoBehaviour
 {
     // Private fields
-    IEnumerator invisibleDelayCache;
+    private IEnumerator _invisibleDelayCache;
 
-    Vector3 moveForce;
+    private Vector3 _moveForce;
 
-    Vector3 jumpForce;
+    private Vector3 _jumpForce;
 
-    Rigidbody ballRb;
+    private Rigidbody _ballRb;
 
-    Collider ballSC;
+    private Collider _ballSc;
 
-    bool isPressed;
+    private bool _isPressed;
+
+    private float _angle;
 
     // Name
     [field: SerializeField]
@@ -30,50 +32,43 @@ public class PlayerMovement : MonoBehaviour
     [Space(15)]
 
     [SerializeField]
-    float moveSpeed = default;
+    private float moveSpeed;
 
-    [SerializeField]
-    float maxJumpLimit = 50f;
+    [SerializeField] private float maxJumpLimit = 50f;
 
-    [SerializeField]
-    float bounceForce;
+    [SerializeField] private float bounceForce;
 
     // Tilting
     [Space(15)]
 
     [SerializeField, Tooltip("Check this if the player-item is required to tilt")]
-    bool shouldTilt;
+    private bool shouldTilt;
 
-    [SerializeField]
-    float tiltAngle = 45f;
+    [SerializeField] private float tiltAngle = 45f;
 
-    [SerializeField]
-    float tiltSpeed = 8f;
+    [SerializeField] private float tiltSpeed = 8f;
 
     // Particle Fx
     [Space(10)]
 
     [SerializeField]
-    ParticleSystem respawnFx;
+    private ParticleSystem respawnFx;
 
-    [SerializeField]
-    ParticleSystem dustTrail;
+    [SerializeField] private ParticleSystem dustTrail;
 
     // SoundFx
     [Space(10)]
 
     [SerializeField]
-    AudioClip trailSfx;
+    private AudioClip trailSfx;
 
-    [SerializeField]
-    AudioClip overboardSfx;
+    [SerializeField] private AudioClip overboardSfx;
 
     private void Awake()
     {
-        ballRb = GetComponent<Rigidbody>();
+        _ballRb = GetComponent<Rigidbody>();
 
-        ballSC = GetComponent<Collider>();
-
+        _ballSc = GetComponent<Collider>();
     }
 
     private void OnEnable()
@@ -89,19 +84,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (state.Equals(GameStates.Pause) || state.Equals(GameStates.Loading))
             // Freeze 
-            ballRb.isKinematic = true;
+            _ballRb.isKinematic = true;
         else
-            // UnFreeze
-            ballRb.isKinematic = false;
-
-        if (state.Equals(GameStates.GameOver) || state.Equals(GameStates.DestroyWait))
         {
-            ballRb.isKinematic = true;
-
-            enabled = false;
-
-            gameObject.ToggleActive(false);
+            // UnFreeze
+            _isPressed = false;
+            _ballRb.isKinematic = false;
         }
+
+        if (!state.Equals(GameStates.GameOver) && !state.Equals(GameStates.DestroyWait)) return;
+
+        _ballRb.isKinematic = true;
+
+        enabled = false;
+
+        gameObject.ToggleActive(false);
     }
 
     /// <summary>
@@ -110,9 +107,9 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="delay">re-spawn delay</param>
     public void Init(float delay)
     {
-        ballSC.isTrigger = true;
+        _ballSc.isTrigger = true;
 
-        ballRb.isKinematic = false;
+        _ballRb.isKinematic = false;
 
         enabled = true;
 
@@ -121,19 +118,19 @@ public class PlayerMovement : MonoBehaviour
         ShowRespawnFx(true);
 
         // Overwrites the existing coroutine instead of waiting for it to finish.
-        if (invisibleDelayCache != null)
-            StopCoroutine(invisibleDelayCache);
+        if (_invisibleDelayCache != null)
+            StopCoroutine(_invisibleDelayCache);
 
-        invisibleDelayCache = InvisibleDelay(delay);
+        _invisibleDelayCache = InvisibleDelay(delay);
 
-        StartCoroutine(invisibleDelayCache);
+        StartCoroutine(_invisibleDelayCache);
     }
 
     /// <summary>
     /// Simulates a Particle effect to present the player is in its re-spawn state. 
     /// </summary>
     /// <param name="canShow">Plays the particle effect if set to true</param>
-    void ShowRespawnFx(bool canShow)
+    private void ShowRespawnFx(bool canShow)
     {
         if (canShow)
             respawnFx.Play();
@@ -146,62 +143,53 @@ public class PlayerMovement : MonoBehaviour
         // Rotates the player if set to rotate.
         if (shouldTilt)
         {
-            float angle = Mathf.Atan2(-ballRb.velocity.y, tiltAngle) * Mathf.Rad2Deg;
+            _angle = Mathf.Atan2(-_ballRb.velocity.y, tiltAngle) * Mathf.Rad2Deg;
 
             // Applies rotation the x and z axis
-            var tilt = Quaternion.Euler(angle, 0, angle / 2f);
+            var tilt = Quaternion.Euler(_angle, 0, _angle / 2f);
 
             transform.rotation = Quaternion.Lerp(transform.rotation, tilt, Time.deltaTime * tiltSpeed);
         }
 
         if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonDown(0))
-            isPressed = true;
+            _isPressed = true;
     }
 
     private void FixedUpdate()
     {
-        moveForce = Vector3.forward * moveSpeed;
+        _moveForce = Vector3.forward * moveSpeed;
 
-        ballRb.AddForce(moveForce * Time.fixedDeltaTime);
+        _ballRb.AddForce(_moveForce * Time.fixedDeltaTime);
 
 
         // Applies an immediate upward-force if input is applied
-        if (isPressed)
+        if (_isPressed)
         {
             PlayFx();
 
-            jumpForce = Vector3.up * bounceForce;
+            _jumpForce = Vector3.up * bounceForce;
 
-            ballRb.AddForce(1000 * Time.fixedDeltaTime * jumpForce);
+            _ballRb.AddForce(1000 * Time.fixedDeltaTime * _jumpForce);
         }
 
         // Prevents the player from going overboard.
-        if (ballRb.position.y >= maxJumpLimit)
+        if (Mathf.Abs(_ballRb.position.y) > maxJumpLimit)
         {
-            ballRb.AddForce(1000 * bounceForce * Time.fixedDeltaTime * -Vector3.up);
+            _ballRb.AddForce(1000 * bounceForce * Time.fixedDeltaTime * Mathf.Sign(_ballRb.position.y) * -Vector3.up);
 
-            SoundManager.Instance.PlaySfx(overboardSfx);
-
+            SoundManager.Instance.PlaySfx(overboardSfx, .5f);
         }
 
-        else if (ballRb.position.y <= -maxJumpLimit)
-        {
-            ballRb.AddForce(1000 * bounceForce * Time.fixedDeltaTime * Vector3.up);
-
-            SoundManager.Instance.PlaySfx(overboardSfx);
-        }
-
-
-        isPressed = false;
+        _isPressed = false;
     }
 
     // Prevents player from colliding with platforms
-    IEnumerator InvisibleDelay(float delay)
+    private IEnumerator InvisibleDelay(float delay)
     {
         yield return Utility.GetWaitForSeconds(delay);
 
         // After invisibility
-        ballSC.isTrigger = false;
+        _ballSc.isTrigger = false;
 
         ShowRespawnFx(false);
     }
@@ -209,14 +197,14 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Plays effects(particle/sound) for specific player-items
     /// </summary>
-    void PlayFx()
+    private void PlayFx()
     {
         if (dustTrail == null)
             return;
 
         dustTrail.Play();
 
-        SoundManager.Instance.PlaySfx(trailSfx);
+        SoundManager.Instance.PlaySfx(trailSfx, .5f);
     }
 
     private void OnDisable()

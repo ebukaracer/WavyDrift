@@ -10,23 +10,23 @@ namespace Racer.LoadManager
     /// See also: <see cref="LoadTask"/>.
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
-    class CanvasGroupTask : LoadTask
+    internal class CanvasGroupTask : LoadTask
     {
-        CanvasGroup canvasGroup;
+        private CanvasGroup _canvasGroup;
 
-        WaitForSeconds waitForSeconds;
+        private WaitForSeconds _waitForSeconds;
 
         [Space(10)]
 
         [SerializeField, Range(0, 1f)]
-        float fadeDelay = .05f;
+        private float fadeDelay = .05f;
 
 
-        void Start()
+        private void Start()
         {
-            canvasGroup = GetComponent<CanvasGroup>();
+            _canvasGroup = GetComponent<CanvasGroup>();
 
-            waitForSeconds = new WaitForSeconds(fadeDelay);
+            _waitForSeconds = new WaitForSeconds(fadeDelay);
 
             // Since the coroutine would iterate over ten times(..the total time it'd elapse).
             // Example: 0.05f * 10f = 0.5f, which means it'd take 0.5f seconds to complete fade-in/out.
@@ -43,7 +43,6 @@ namespace Racer.LoadManager
                 StartCoroutine(FadeOutCanvasGroup());
         }
        
-
         private void Instance_OnLoadInit()
         {
             StartCoroutine(FadeInCanvasGroup());
@@ -54,36 +53,40 @@ namespace Racer.LoadManager
             EnableLoaderDefaultAnimation();
         }
 
-        IEnumerator FadeInCanvasGroup()
+        private IEnumerator FadeInCanvasGroup()
         {
-            canvasGroup.alpha = 0;
+            _canvasGroup.alpha = 0;
 
-            while (canvasGroup.alpha < 1)
+            _canvasGroup.blocksRaycasts = true;
+
+            while (_canvasGroup.alpha < 1)
             {
-                canvasGroup.alpha += .1f;
+                _canvasGroup.alpha += .1f;
 
-                yield return waitForSeconds;
+                yield return _waitForSeconds;
             }
 
-            canvasGroup.alpha = 1;
+            _canvasGroup.alpha = 1;
         }
 
-        IEnumerator FadeOutCanvasGroup()
+        private IEnumerator FadeOutCanvasGroup()
         {
-            canvasGroup.alpha = 1;
+            _canvasGroup.alpha = 1;
 
-            while (canvasGroup.alpha > 0)
+            while (_canvasGroup.alpha > 0)
             {
-                canvasGroup.alpha -= .1f;
+                _canvasGroup.alpha -= .1f;
 
-                yield return waitForSeconds;
+                yield return _waitForSeconds;
             }
 
-            canvasGroup.alpha = 0;
+            _canvasGroup.alpha = 0;
+
+            _canvasGroup.blocksRaycasts = false;
         }
 
-        private void OnDisable()
-        {
+        private void OnDestroy()
+        { 
             LoadManager.Instance.OnLoadStarted -= Instance_OnLoadStarted;
 
             LoadManager.Instance.OnLoadInit -= Instance_OnLoadInit;

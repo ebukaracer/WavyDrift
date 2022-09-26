@@ -1,65 +1,69 @@
-﻿using Racer.Utilities;
+﻿using Racer.SoundManager;
+using Racer.Utilities;
 using UnityEngine;
 
 /// <summary>
 /// Handles camera follow and flipping.
 /// </summary>
-public class CameraController : MonoBehaviour
+internal class CameraController : MonoBehaviour
 {
-    float current, target;
+    private float _current, _target;
 
-    Vector3 offset;
+    private Vector3 _offset, _desiredPos;
 
-    Vector3 goalRot, initialRot;
+    private Vector3 _goalRot, _initialRot;
 
-    Transform player;
+    private Transform _player;
 
     [Header("Follow")]
 
     [SerializeField]
-    float followSpeed = 5;
+    private float followSpeed = 5;
 
     [Header("Flipping")]
 
     [Space(10), SerializeField]
-    float flipSpeed;
+    private float flipSpeed;
 
-    [SerializeField]
-    AnimationCurve animationCurve;
+    [SerializeField] private AnimationCurve animationCurve;
+
+    [SerializeField] private AudioClip flipSfx;
 
 
     private void Start()
     {
         // Follow
-        player = PlayerController.Instance.PlayerMovement.transform;
+        _player = PlayerController.Instance.PlayerMovement.transform;
 
-        offset = transform.position - player.position;
+        _offset = transform.position - _player.position;
 
         // Flipping
-        initialRot = Utility.CameraMain.transform.rotation.eulerAngles;
+        _initialRot = Utility.CameraMain.transform.rotation.eulerAngles;
 
-        goalRot = new Vector3(initialRot.x, initialRot.y, 180);
+        _goalRot = new Vector3(_initialRot.x, _initialRot.y, 180);
     }
 
 
     private void FixedUpdate()
     {
-        Vector3 desiredPos = player.position + offset;
+        _desiredPos = _player.position + _offset;
 
         // Smoothly follows player.
-        transform.position = Vector3.Lerp(transform.position, desiredPos, Time.fixedDeltaTime * followSpeed);
+        transform.position = Vector3.Lerp(transform.position, _desiredPos, Time.fixedDeltaTime * followSpeed);
     }
 
     public void FlipRotation()
     {
-        target = target == 0 ? 1 : 0;
+        _target = _target == 0 ? 1 : 0;
+
+        SoundManager.Instance.PlaySfx(flipSfx);
     }
 
     private void Update()
     {
-        current = Mathf.MoveTowards(current, target, flipSpeed * Time.deltaTime);
+        _current = Mathf.MoveTowards(_current, _target, flipSpeed * Time.deltaTime);
 
         // Smoothly flips the camera to a desired rotation.
-        Utility.CameraMain.transform.rotation = Quaternion.Lerp(Quaternion.Euler(initialRot), Quaternion.Euler(goalRot), animationCurve.Evaluate(current));
+        Utility.CameraMain.transform.rotation = Quaternion.Lerp(Quaternion.Euler(_initialRot), Quaternion.Euler(_goalRot), animationCurve.Evaluate(_current));
     }
 }

@@ -7,39 +7,38 @@ using UnityEngine;
 /// </summary>
 public class PlayerCollider : MonoBehaviour
 {
-    int multiplier = 1;
+    private int _multiplier = 1;
 
-    PlayerMovement playerMovement;
+    private PlayerMovement _playerMovement;
 
-    Collectible collectible;
+    private Collectible _collectible;
 
     // A kind of collectible
-    Damageable damageable;
+    private Damageable _damageable;
 
     // PoolObject poolObject;
 
-    FillController fillController;
+    private FillController _fillController;
 
-    ShardFxController shardFxController;
+    private ShardFxController _shardFxController;
 
-    [SerializeField]
-    AudioClip collectibleClip;
+    [SerializeField] private AudioClip collectibleClip;
 
 
 
     private void Start()
     {
-        playerMovement = GetComponent<PlayerMovement>();
+        _playerMovement = GetComponent<PlayerMovement>();
 
-        fillController = FillController.Instance;
+        _fillController = FillController.Instance;
 
-        shardFxController = ShardFxController.Instance;
+        _shardFxController = ShardFxController.Instance;
 
-        fillController.GhostFill.OnDecreaseStarted += GhostFill_OnDecreaseStarted;
+        _fillController.GhostFill.OnDecreaseStarted += GhostFill_OnDecreaseStarted;
 
         var item = ItemManager.Instance.CollectibleItem.GetItemByIndex(0);
 
-        multiplier = item.IsUnlocked ? item.ResourceValue : multiplier;
+        _multiplier = item.IsUnlocked ? item.ResourceValue : _multiplier;
     }
 
 
@@ -50,24 +49,24 @@ public class PlayerCollider : MonoBehaviour
         {
             SoundManager.Instance.PlaySfx(collectibleClip);
 
-            collectible = other.GetComponent<Collectible>();
+            _collectible = other.GetComponent<Collectible>();
 
-            shardFxController.InitFx(collectible.collectibleType, other.transform.position);
+            _shardFxController.InitFx(_collectible.collectibleType, other.transform.position);
 
-            switch (collectible.collectibleType)
+            switch (_collectible.collectibleType)
             {
                 case CollectibleType.Coin:
-                    UIControllerGame.Instance.SetCoinT(multiplier);
+                    UIControllerGame.Instance.SetCoinT(_multiplier);
                     break;
                 case CollectibleType.Diamond:
                     UIControllerGame.Instance.SetDiamondT(1);
                     break;
-                case CollectibleType.Coin_Magnet:
-                    fillController.CoinMagnetFill.DecreaseFill();
+                case CollectibleType.CoinMagnet:
+                    _fillController.CoinMagnetFill.DecreaseFill();
                     // Extra Logic
                     break;
-                case CollectibleType.Ghost_Portion:
-                    fillController.GhostFill.DecreaseFill();
+                case CollectibleType.GhostPortion:
+                    _fillController.GhostFill.DecreaseFill();
                     // Extra Logic
                     break;
             }
@@ -80,18 +79,18 @@ public class PlayerCollider : MonoBehaviour
         {
             SoundManager.Instance.PlaySfx(collectibleClip);
 
-            damageable = other.GetComponent<Damageable>();
+            _damageable = other.GetComponent<Damageable>();
 
-            shardFxController.InitFx(damageable.damageableType, other.transform.position);
+            _shardFxController.InitFx(_damageable.damageableType, other.transform.position);
 
-            switch (damageable.damageableType)
+            switch (_damageable.damageableType)
             {
                 case DamageableType.Danger:
-                    fillController.DangerFill.DecreaseTime = Random.Range(5, 8);
-                    fillController.DangerFill.DecreaseFill();
+                    _fillController.DangerFill.DecreaseTime = Random.Range(5, 8);
+                    _fillController.DangerFill.DecreaseFill();
                     // Extra Logic
                     break;
-                case DamageableType.Asteriod:
+                case DamageableType.Asteroid:
                     StartCoroutine(Utility.CameraMain.transform.Shake
                         (Random.Range(.5f, 1f),
                         Random.Range(2f, 4f)));
@@ -127,7 +126,7 @@ public class PlayerCollider : MonoBehaviour
 
     private void GhostFill_OnDecreaseStarted()
     {
-        playerMovement.Init(fillController.GhostFill.DecreaseTime);
+        _playerMovement.Init(_fillController.GhostFill.DecreaseTime);
     }
 }
 

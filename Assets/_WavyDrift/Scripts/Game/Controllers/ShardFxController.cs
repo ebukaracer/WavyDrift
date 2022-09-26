@@ -4,19 +4,19 @@ using UnityEngine;
 /// <summary>
 /// Controls which shard-type particle effect to spawn.
 /// </summary>
-public class ShardFxController : SingletonPattern.Singleton<ShardFxController>
+internal class ShardFxController : SingletonPattern.Singleton<ShardFxController>
 {
-    ParticleSystemRenderer psRenderer;
+    private ParticleSystemRenderer _psRenderer;
 
-    ParticleSystem _particleSystem;
+    private ParticleSystem _particleSystem;
 
     [SerializeField, Tooltip("Mesh to assign to the particle system's renderer")]
-    Mesh coin, diamond, coin_Magnet, shield, danger, asteroid;
+    private Mesh shield, danger, asteroid, coinMagnet, coin, diamond;
 
 
     private void Start()
     {
-        psRenderer = GetComponent<ParticleSystemRenderer>();
+        _psRenderer = GetComponent<ParticleSystemRenderer>();
 
         _particleSystem = GetComponent<ParticleSystem>();
     }
@@ -31,16 +31,16 @@ public class ShardFxController : SingletonPattern.Singleton<ShardFxController>
         switch (collectibleType)
         {
             case CollectibleType.Coin:
-                psRenderer.mesh = coin;
+                _psRenderer.mesh = coin;
                 break;
             case CollectibleType.Diamond:
-                psRenderer.mesh = diamond;
+                _psRenderer.mesh = diamond;
                 break;
-            case CollectibleType.Coin_Magnet:
-                psRenderer.mesh = coin_Magnet;
+            case CollectibleType.CoinMagnet:
+                _psRenderer.mesh = coinMagnet;
                 break;
-            case CollectibleType.Ghost_Portion:
-                psRenderer.mesh = shield;
+            case CollectibleType.GhostPortion:
+                _psRenderer.mesh = shield;
                 break;
         }
 
@@ -52,17 +52,17 @@ public class ShardFxController : SingletonPattern.Singleton<ShardFxController>
     /// <summary>
     /// Spawns a particle effect(inform of a mesh) that conforms to the actual damageable being used.
     /// </summary>
-    /// <param name="collectibleType">Damageable to match with...</param>
+    /// <param name="damageableType">Damageable to match with...</param>
     /// <param name="pos">Position to spawn...</param>
     public void InitFx(DamageableType damageableType, Vector3 pos)
     {
         switch (damageableType)
         {
             case DamageableType.Danger:
-                psRenderer.mesh = danger;
+                _psRenderer.mesh = danger;
                 break;
-            case DamageableType.Asteriod:
-                psRenderer.mesh = asteroid;
+            case DamageableType.Asteroid:
+                _psRenderer.mesh = asteroid;
                 break;
         }
 

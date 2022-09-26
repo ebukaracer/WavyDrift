@@ -1,0 +1,16 @@
+{
+    "name": "SoundManager",
+    "rootNamespace": "Racer.SoundManager",
+    "references": [
+        "GUID:c6a9ccb5240d20945bda17b7ae0045fe"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

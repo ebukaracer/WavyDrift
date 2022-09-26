@@ -88,8 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2afcfffadbc57041b942a909050a731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeStep: 0.05
-  _oneStepAngle: 30
+  timeStep: 0.01
+  oneStepAngle: 10
 --- !u!1 &2732472827119503939
 GameObject:
   m_ObjectHideFlags: 0

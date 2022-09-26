@@ -1,59 +1,42 @@
-﻿using Racer.SaveSystem;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class ObstaclesSpawner : MonoBehaviour
 {
-    Transform player;
+    private Transform _player;
 
-    float startPos;
+    private float _startPos;
 
-    [SerializeField]
-    Transform[] boundaryPrefab;
+    [SerializeField] private Transform[] boundaryPrefab;
 
-    [SerializeField]
-    int boundarySpawnAmount;
+    [SerializeField] private int boundarySpawnAmount;
 
-    [Space(10)]
+    [Space(10), SerializeField] private Transform[] collectiblesPrefab;
 
-    [SerializeField]
-    Transform[] collectiblesPrefab;
+    [SerializeField] private bool spawnCollectibles = true;
 
-    [SerializeField]
-    bool spawnCollectibles = true;
+    [Space(15), SerializeField] private Transform[] damageablesPrefab;
 
-    [Space(15)]
+    [Space(10), SerializeField] private float yRange;
 
-    [SerializeField]
-    Transform[] damageablesPrefab;
+    [SerializeField] private float zSpacing;
 
-    [Space(10)]
-
-    [SerializeField]
-    float yRange;
-
-    [SerializeField]
-    float zSpacing;
-    [SerializeField]
-
-    [Space(10)]
-
-    int autoDestroyLimit;
+    [SerializeField, Space(10)] private int autoDestroyLimit;
 
 
     private void Start()
     {
         RandomizeOnStart();
 
-        player = PlayerController.Instance.PlayerMovement.transform;
+        _player = PlayerController.Instance.PlayerMovement.transform;
 
         StartCoroutine(AutoDestroyMe());
     }
 
 
     [ContextMenu("Spawn Obstacles")]
-    void SpawnObstacle()
+    private void SpawnObstacle()
     {
         int index = 0;
 
@@ -67,7 +50,7 @@ public class ObstaclesSpawner : MonoBehaviour
             float yPos = Random.Range(-yRange, yRange);
 
             var clone = Instantiate(randomBoundary,
-                new Vector3(0, yPos, transform.position.z + startPos),
+                new Vector3(0, yPos, transform.position.z + _startPos),
                 randomBoundary.rotation,
                 transform);
 
@@ -76,30 +59,34 @@ public class ObstaclesSpawner : MonoBehaviour
 
             index++;
 
-            startPos += Random.Range(zSpacing, zSpacing + 5);
+            _startPos += Random.Range(zSpacing, maxInclusive: zSpacing + 5);
         }
 
-        startPos = 0;
+        _startPos = 0;
     }
 
-    void SpawnCollectibles(Vector3 pos)
+    private void SpawnCollectibles(Vector3 pos)
     {
-        var randomNum = Random.Range(0, boundarySpawnAmount);
+        var randomNum = Random.Range(0, maxInclusive: boundarySpawnAmount);
 
-        if (randomNum == 0)
-            SpawnDiamonds(pos);
-
-        else if (randomNum == 1)
-            SpawnCoinMagnet(pos);
-
-        else if (randomNum == 2)
-            SpawnGhost(pos);
-
-        else if (randomNum == 3)
-            SpawnDamageables(pos);
-
-        else
-            SpawnCoins(pos);
+        switch (randomNum)
+        {
+            case 0:
+                SpawnDiamonds(pos);
+                break;
+            case 1:
+                SpawnCoinMagnet(pos);
+                break;
+            case 2:
+                SpawnGhost(pos);
+                break;
+            case 3:
+                SpawnDamageables(pos);
+                break;
+            default:
+                SpawnCoins(pos);
+                break;
+        }
     }
 
     private void SpawnCoins(Vector3 pos) =>
@@ -136,7 +123,7 @@ public class ObstaclesSpawner : MonoBehaviour
                             transform);
     }
 
-    void SpawnDamageables(Vector3 pos)
+    private void SpawnDamageables(Vector3 pos)
     {
         int randomItem = Random.Range(0, damageablesPrefab.Length);
 
@@ -147,25 +134,28 @@ public class ObstaclesSpawner : MonoBehaviour
     }
 
 
-    void RandomizeOnStart()
+    private void RandomizeOnStart()
     {
         if (Random.Range(0, 2) == 1)
             RefreshObstacle();
     }
 
     [ContextMenu("Clear Obstacles")]
-    void ClearObstacles()
+    private void ClearObstacles()
     {
+        // TODO: Review
         var children = transform.GetComponentsInChildren<Obstacles>().Where(c => c.gameObject.name.Contains("Clone"));
 
-        if (children.Count() <= 0)
+        var obstaclesEnumerable = children.ToList();
+
+        if (!obstaclesEnumerable.Any())
         {
             Debug.LogWarning(($"[{transform.gameObject.name}]  is Empty!"));
 
             return;
         }
 
-        foreach (var child in children)
+        foreach (var child in obstaclesEnumerable)
         {
             if (Application.isPlaying)
                 Destroy(child.gameObject);
@@ -175,18 +165,18 @@ public class ObstaclesSpawner : MonoBehaviour
     }
 
     [ContextMenu("Refresh Obstacles")]
-    void RefreshObstacle()
+    private void RefreshObstacle()
     {
         ClearObstacles();
 
         SpawnObstacle();
     }
 
-    IEnumerator AutoDestroyMe()
+    private IEnumerator AutoDestroyMe()
     {
         while (true)
         {
-            if (player.position.z - transform.position.z > autoDestroyLimit)
+            if (_player.position.z - transform.position.z > autoDestroyLimit)
             {
                 Destroy(gameObject);
             }

@@ -4,9 +4,9 @@ using UnityEngine;
 /// <summary>
 /// Spawns and initializes a particular broken-player-item on start.
 /// </summary>
-public class BrokenPlayerController : SingletonPattern.Singleton<BrokenPlayerController>
+internal class BrokenPlayerController : SingletonPattern.Singleton<BrokenPlayerController>
 {
-    GameObject brokenPlayerToUse;
+    private GameObject _brokenPlayerToUse;
 
     public BrokenPlayer BrokenPlayer { get; private set; }
 
@@ -18,7 +18,7 @@ public class BrokenPlayerController : SingletonPattern.Singleton<BrokenPlayerCon
     }
 
 
-    void Setup()
+    private void Setup()
     {
         var itemManager = ItemManager.Instance;
 
@@ -27,21 +27,20 @@ public class BrokenPlayerController : SingletonPattern.Singleton<BrokenPlayerCon
         {
             var item = itemManager.PlayerItem.GetItemByIndex(i);
 
-            if (item.IsUsing)
-            {
-                brokenPlayerToUse = item.BrokenPlayerPrefab;
+            if (!item.IsUsing) continue;
 
-                brokenPlayerToUse.ToggleActive(false);
+            _brokenPlayerToUse = item.BrokenPlayerPrefab;
 
-                break;
-            }
+            _brokenPlayerToUse.ToggleActive(false);
+
+            break;
         }
 
-        if (brokenPlayerToUse == null)
+        if (_brokenPlayerToUse == null)
             return;
 
         // Assigns the instantiated broken-player to 'BrokenPlayer' reference.
-        BrokenPlayer = Instantiate(brokenPlayerToUse, transform).GetComponent<BrokenPlayer>();
+        BrokenPlayer = Instantiate(_brokenPlayerToUse, transform).GetComponent<BrokenPlayer>();
     }
 }
 

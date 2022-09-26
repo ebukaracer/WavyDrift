@@ -1,25 +1,23 @@
 using UnityEngine;
 
 
-public class ObstacleAnim : MonoBehaviour
+internal class ObstacleAnim : MonoBehaviour
 {
-    Vector3 startPos;
+    private Vector3 _startPos;
 
-    [SerializeField]
-    float delta;
+    [SerializeField] private float delta;
 
-    [SerializeField]
-    float speed;
+    [SerializeField] private float speed;
 
 
-    void Start()
+    private void Start()
     {
-        startPos = transform.localPosition;
+        _startPos = transform.localPosition;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        Vector3 newPos = startPos;
+        var newPos = _startPos;
 
         newPos.y += delta * Mathf.Sin(Time.time * speed);
 

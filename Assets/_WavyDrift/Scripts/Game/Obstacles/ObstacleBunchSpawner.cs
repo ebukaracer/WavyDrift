@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 
-class ObstacleBunchSpawner : MonoBehaviour
+internal class ObstacleBunchSpawner : MonoBehaviour
 {
-    [SerializeField]
-    Transform[] obstaclePrefabs;
+    [SerializeField] private Transform[] obstaclePrefabs;
 
     [Space(10f)]
 
     // Dynamic
     [SerializeField]
-    float initialSpawnPos = 30f;
+    private float initialSpawnPos = 30f;
 
     [field: SerializeField]
     public int NextSpawnPos { get; set; }
@@ -27,7 +26,7 @@ class ObstacleBunchSpawner : MonoBehaviour
     
 
     [ContextMenu("Clear Obstacle Bunch")]
-    void ClearObstacleBunch()
+    private void ClearObstacleBunch()
     {
         initialSpawnPos = 30f;
 

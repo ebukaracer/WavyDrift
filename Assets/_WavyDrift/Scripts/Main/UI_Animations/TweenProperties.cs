@@ -1,10 +1,10 @@
 ﻿using DG.Tweening;
 
-class TweenProperties
+internal class TweenProperties
 {
-    public float duration;
+    public float Duration;
 
-    public float endValue;
+    public float EndValue;
 
-    public Ease easeType;
+    public Ease EaseType;
 }

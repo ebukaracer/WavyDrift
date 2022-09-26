@@ -7,17 +7,17 @@ namespace Racer.LoadManager
     /// Automatically starts simulating when the containing gameobject is active.
     /// Containing gameobject must be inactive for this to work appropriately.
     /// </summary>
-    class LoadingCircle : MonoBehaviour
+    internal class LoadingCircle : MonoBehaviour
     {
-        RectTransform _mainIcon;
+        private RectTransform _mainIcon;
 
-        Vector3 iconAngle;
+        private Vector3 _iconAngle;
 
-        float _startTime;
+        private float _startTime;
 
-        [SerializeField] float _timeStep = 0.03f;
+        [SerializeField] private float timeStep = 0.03f;
 
-        [SerializeField] float _oneStepAngle = 30;
+        [SerializeField] private float oneStepAngle = 30;
 
 
 
@@ -34,19 +34,18 @@ namespace Racer.LoadManager
         }
 
 
-        void Update()
+        private void Update()
         {
             // TODO: Find a smoother way to interpolate the rotation.
-            if (Time.time - _startTime >= _timeStep)
-            {
-                iconAngle = _mainIcon.localEulerAngles;
+            if (!(Time.time - _startTime >= timeStep)) return;
 
-                iconAngle.z += _oneStepAngle;
+            _iconAngle = _mainIcon.localEulerAngles;
 
-                _mainIcon.localEulerAngles = iconAngle;
+            _iconAngle.z += oneStepAngle;
 
-                _startTime = Time.time;
-            }
+            _mainIcon.localEulerAngles = _iconAngle;
+
+            _startTime = Time.time;
         }
 
         private void Instance_OnLoadFinished()

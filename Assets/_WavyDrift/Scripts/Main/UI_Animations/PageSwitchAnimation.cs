@@ -5,19 +5,17 @@ using DG.Tweening;
 /// <summary>
 /// Handles page/panel transitions(fade-in/fade-out)
 /// </summary>
-class PageSwitchAnimation : MonoBehaviour
+internal class PageSwitchAnimation : MonoBehaviour
 {
-    CanvasGroup currentPageCanvasGroup;
+    private CanvasGroup _currentPageCanvasGroup;
 
-    RectTransform currentPage;
+    private RectTransform _currentPage;
 
-    int currentPageNumber;
+    private int _currentPageNumber;
 
-    [SerializeField]
-    List<RectTransform> pages;
+    [SerializeField] private List<RectTransform> pages;
 
-    [Space(5), SerializeField]
-    float fadeDuration;
+    [Space(5), SerializeField] private float fadeDuration;
 
     private void Awake()
     {
@@ -32,9 +30,9 @@ class PageSwitchAnimation : MonoBehaviour
         }
 
         // Current page set to the first page-item on the [pages] list.
-        currentPage = pages[0];
+        _currentPage = pages[0];
 
-        currentPageNumber = 0;
+        _currentPageNumber = 0;
     }
 
     /// <summary>
@@ -51,30 +49,30 @@ class PageSwitchAnimation : MonoBehaviour
     /// Sets a page active/inactive based on its number.
     /// </summary>
     /// <param name="pageNumber">The current page's number to enable/disable</param>
-    void SwitchPage(int pageNumber)
+    private void SwitchPage(int pageNumber)
     {
-        if (currentPageNumber == pageNumber)
+        if (_currentPageNumber == pageNumber)
             return;
 
         // Sets the previous page inactive
-        currentPageCanvasGroup = currentPage.GetComponent<CanvasGroup>();
+        _currentPageCanvasGroup = _currentPage.GetComponent<CanvasGroup>();
 
-        currentPageCanvasGroup.blocksRaycasts = false;
+        _currentPageCanvasGroup.blocksRaycasts = false;
 
-        currentPageCanvasGroup.DOFade(0, fadeDuration).OnComplete
+        _currentPageCanvasGroup.DOFade(0, fadeDuration).OnComplete
         (
             delegate
             {
                 // Sets a new page active
-                currentPage = pages[pageNumber];
+                _currentPage = pages[pageNumber];
 
-                currentPageCanvasGroup = currentPage.GetComponent<CanvasGroup>();
+                _currentPageCanvasGroup = _currentPage.GetComponent<CanvasGroup>();
 
-                currentPageCanvasGroup.DOFade(1, fadeDuration);
+                _currentPageCanvasGroup.DOFade(1, fadeDuration);
 
-                currentPageCanvasGroup.blocksRaycasts = true;
+                _currentPageCanvasGroup.blocksRaycasts = true;
 
-                currentPageNumber = pageNumber;
+                _currentPageNumber = pageNumber;
             }
         );
     }

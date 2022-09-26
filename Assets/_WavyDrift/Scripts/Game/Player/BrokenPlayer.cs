@@ -7,42 +7,37 @@ using UnityEngine;
 /// <summary>
 /// Enables a broken-player when required.
 /// </summary>
-public class BrokenPlayer : MonoBehaviour
+internal class BrokenPlayer : MonoBehaviour
 {
-    bool hasAccessed;
+    private bool _hasAccessed;
 
-    FillBar radialFill;
+    private FillBar _radialFill;
 
-    [SerializeField]
-    List<Rigidbody> rb;
+    [SerializeField] private List<Rigidbody> rb;
 
-    [SerializeField, Space(5)]
-    ParticleSystem ps;
+    [SerializeField, Space(5)] private ParticleSystem ps;
 
-    [SerializeField, Space(5)]
-    float destroyDelay = 2.5f;
+    [SerializeField, Space(5)] private float destroyDelay = 2.5f;
 
-    [SerializeField]
-    float explosionForce = 2500f;
+    [SerializeField] private float explosionForce = 2500f;
 
-    [SerializeField, Space(5)]
-    AudioClip decimateFx;
+    [SerializeField, Space(5)] private AudioClip decimateFx;
 
-    // For the rigid bodies: set 'IsKinamatics' true,
+    // For the rigid bodies: set 'IsKinematics' true,
     // Set drag to 0.
 
     private void OnEnable()
     {
         // Prevents re-initializing 'radialFill' every time 'OnEnable' is called.
-        if (!hasAccessed)
+        if (!_hasAccessed)
         {
-            radialFill = FillController.Instance.RadialFill;
+            _radialFill = FillController.Instance.RadialFill;
 
-            hasAccessed = true;
+            _hasAccessed = true;
         }
 
         // Subscription
-        radialFill.OnDecreaseFinished += DelayRadial_OnDecreaseFinished;
+        _radialFill.OnDecreaseFinished += DelayRadial_OnDecreaseFinished;
 
         StartCoroutine(DecimateSetupDelay());
     }
@@ -80,16 +75,16 @@ public class BrokenPlayer : MonoBehaviour
         yield return Utility.GetWaitForSeconds(.35f);
 
         // Time to elapse.
-        radialFill.DecreaseTime = destroyDelay;
+        _radialFill.DecreaseTime = destroyDelay;
 
         // Triggers the radial-fill that displays the time left.
-        radialFill.DecreaseFill();
+        _radialFill.DecreaseFill();
     }
 
     /// <summary>
     /// A little delay before disabling broken-player pieces.
     /// </summary>
-    IEnumerator DisablePiecesDelay()
+    private IEnumerator DisablePiecesDelay()
     {
         yield return Utility.GetWaitForSeconds(destroyDelay + 3.5f);
 
@@ -108,7 +103,7 @@ public class BrokenPlayer : MonoBehaviour
     /// <param name="state"></param>
     public void StopCountdown(bool state)
     {
-        radialFill.IsStopRoutine = state;
+        _radialFill.IsStopRoutine = state;
     }
 
     /// <summary>
@@ -129,8 +124,8 @@ public class BrokenPlayer : MonoBehaviour
         StopCountdown(true);
 
         // Unregister from callback
-        radialFill.OnDecreaseFinished -= DelayRadial_OnDecreaseFinished;
+        _radialFill.OnDecreaseFinished -= DelayRadial_OnDecreaseFinished;
 
-        StopCoroutine(DecimateSetupDelay());
+        StopCoroutine(nameof(DecimateSetupDelay));
     }
 }

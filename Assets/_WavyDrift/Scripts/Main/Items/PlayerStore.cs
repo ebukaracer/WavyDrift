@@ -1,40 +1,31 @@
 using UnityEngine;
 
 
-public enum PlayerName { Wavyball, Kite, Umbrella, Jet, Jetpackboy }
+internal enum PlayerName { Wavyball, Kite, Umbrella, Jet, Jetpackboy }
 
-public enum UnlockTokenName { Coins, Diamonds }
+internal enum UnlockTokenName { Coins, Diamonds }
 
 
 /// <summary>
 /// This stores all player-items to be purchased.
 /// </summary>
 [CreateAssetMenu(fileName = "Player_0", menuName = "PlayerItem", order = 2)]
-public class PlayerStore : ScriptableObject
+internal class PlayerStore : ScriptableObject
 {
-    [SerializeField]
-    int id;
+    [SerializeField] private int id;
 
-    [SerializeField]
-    PlayerName title;
+    [SerializeField] private PlayerName title;
 
-    [SerializeField, Multiline]
-    string description;
+    [SerializeField, Multiline] private string description;
 
+    [SerializeField, Space(10)] private Sprite icon;
 
-    [SerializeField, Space(10)]
-    Sprite icon;
-
-
-    [Space(10), SerializeField]
-    Sprite unlockTokenIcon;
+    [Space(10), SerializeField] private Sprite unlockTokenIcon;
 
     [field: SerializeField]
     public UnlockTokenName UnlockTokenName { get; private set; }
 
-    [SerializeField]
-    int tokenAmount;
-
+    [SerializeField] private int tokenAmount;
 
     [field: SerializeField, Space(10)]
     public int DesiredBest { get; private set; }

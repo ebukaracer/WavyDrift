@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900055998084171681}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.11, y: 2.24, z: 22.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -4829,11 +4829,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ff39f2fd7d60f4791d7a75ca922d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: {fileID: -8400976432805623956, guid: 5ae226cd8430f7149b7e055608be4b60, type: 3}
-  diamond: {fileID: 2401994324257950250, guid: 03ecee63913d4b84faa34efe668dcea6, type: 3}
-  coin_Magnet: {fileID: -3462243035734920951, guid: 0ea5572a397f8c74b8fe79e3fc9cd680,
-    type: 3}
   shield: {fileID: -90238758110818199, guid: efc50393ee42f8044ac69378e7bea592, type: 3}
   danger: {fileID: -394795799185262389, guid: 0b6865bb460fd8e47a3818f0f496f7dd, type: 3}
   asteroid: {fileID: 7803778804846005805, guid: ce9f6a657dbc49c4ca65939f36c4a229,
     type: 3}
+  coinMagnet: {fileID: -3462243035734920951, guid: 0ea5572a397f8c74b8fe79e3fc9cd680,
+    type: 3}
+  coin: {fileID: -8400976432805623956, guid: 5ae226cd8430f7149b7e055608be4b60, type: 3}
+  diamond: {fileID: 2401994324257950250, guid: 03ecee63913d4b84faa34efe668dcea6, type: 3}

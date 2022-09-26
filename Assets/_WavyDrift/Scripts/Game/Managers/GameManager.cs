@@ -8,7 +8,7 @@ using UnityEngine;
 /// <summary>
 /// Game states available for transitioning.
 /// </summary>
-public enum GameStates
+internal enum GameStates
 {
     Loading,
     Playing,
@@ -21,18 +21,18 @@ public enum GameStates
 /// <summary>
 /// This manages the various states of the game.
 /// </summary>
-class GameManager : SingletonPattern.Singleton<GameManager>
+internal class GameManager : SingletonPattern.Singleton<GameManager>
 {
     // Private fields dependencies
-    BrokenPlayerController brokenPlayerController;
+    private BrokenPlayerController _brokenPlayerController;
 
-    PlayerController playerController;
+    private PlayerController _playerController;
 
-    SoundManager soundManager;
+    private SoundManager _soundManager;
 
-    AudioSource musicSource;
+    private AudioSource _musicSource;
 
-    bool isMusicSrcEnabled;
+    private bool _isMusicSrcEnabled;
 
 
     public static event Action<GameStates> OnCurrentState;
@@ -47,24 +47,23 @@ class GameManager : SingletonPattern.Singleton<GameManager>
 
 
     // Other fields
-    [Space(10), SerializeField]
-    AudioClip uiSfx;
+    [Space(10), SerializeField] private AudioClip uiSfx;
 
 
 
     private void Start()
     {
         // Player
-        playerController = PlayerController.Instance;
+        _playerController = PlayerController.Instance;
 
-        brokenPlayerController = BrokenPlayerController.Instance;
+        _brokenPlayerController = BrokenPlayerController.Instance;
 
         // Sound
-        soundManager = SoundManager.Instance;
+        _soundManager = SoundManager.Instance;
 
-        musicSource = soundManager.GetMusic();
+        _musicSource = _soundManager.GetMusic();
 
-        isMusicSrcEnabled = musicSource.enabled;
+        _isMusicSrcEnabled = _musicSource.enabled;
 
         // State
         SetGameState(GameStates.Loading);
@@ -108,7 +107,7 @@ class GameManager : SingletonPattern.Singleton<GameManager>
     /// <summary>
     /// Re-spawns the player if conditions were satisfied.
     /// </summary>
-    void RespawnState()
+    private void RespawnState()
     {
         PlayState();
 
@@ -116,10 +115,10 @@ class GameManager : SingletonPattern.Singleton<GameManager>
         UIControllerGame.Instance.EnableGameover("Gameover_A-out");
 
         // Re-Initialize player
-        playerController.PlayerMovement.Init(3f);
+        _playerController.PlayerMovement.Init(3f);
 
         // Re-Initialize broken-player
-        brokenPlayerController.BrokenPlayer.gameObject.ToggleActive(false);
+        _brokenPlayerController.BrokenPlayer.gameObject.ToggleActive(false);
 
         // Switch to playing-state over a period of delay.
         StartCoroutine(CountDown(.1f));
@@ -129,26 +128,26 @@ class GameManager : SingletonPattern.Singleton<GameManager>
     /// Wait for the player to fulfill some conditions before switching to game-over state.
     /// If conditions are satisfied player gets re-spawned.
     /// </summary>
-    void DestroyWaitState()
+    private void DestroyWaitState()
     {
         // Lower music
-        soundManager.GetSnapShot(2).TransitionTo(.1f);
+        _soundManager.GetSnapShot(2).TransitionTo(0.1f);
 
         // Enable UI
         UIControllerGame.Instance.EnableGameover("Gameover_A");
 
         // Play a sound effect
-        soundManager.PlaySfx(uiSfx);
+        _soundManager.PlaySfx(uiSfx);
 
         // Initialize a broken-player counterpart
-        brokenPlayerController.BrokenPlayer.InitializeOnStartup(playerController.PlayerMovement.gameObject.transform.position,
-                                                       playerController.PlayerMovement.gameObject.transform.rotation);
+        _brokenPlayerController.BrokenPlayer.InitializeOnStartup(_playerController.PlayerMovement.gameObject.transform.position,
+                                                       _playerController.PlayerMovement.gameObject.transform.rotation);
     }
 
     /// <summary>
     /// Triggers when game is over.
     /// </summary>
-    void GameOverState()
+    private void GameOverState()
     {
         FadeOutMusic();
 
@@ -161,8 +160,8 @@ class GameManager : SingletonPattern.Singleton<GameManager>
     /// </summary>
     public void FadeOutMusic()
     {
-        if (isMusicSrcEnabled)
-            musicSource.DOFade(0, .2f).OnComplete(() => musicSource.Stop());
+        if (_isMusicSrcEnabled)
+            _musicSource.DOFade(0, .2f).OnComplete(() => _musicSource.Stop());
     }
 
     /// <summary>
@@ -170,42 +169,42 @@ class GameManager : SingletonPattern.Singleton<GameManager>
     /// </summary>
     public void FadeInMusic()
     {
-        if (!isMusicSrcEnabled)
+        if (!_isMusicSrcEnabled)
             return;
 
-        musicSource.Play();
+        _musicSource.Play();
 
-        musicSource.DOFade(1f, .2f);
+        _musicSource.DOFade(1f, .2f);
     }
 
     /// <summary>
     /// Whilst on Play-state...
     /// Plays an Un-muted music(background).
     /// </summary>
-    void PlayState()
+    private void PlayState()
     {
-        if (isMusicSrcEnabled)
-            soundManager.GetSnapShot(1).TransitionTo(.1f);
+        if (_isMusicSrcEnabled)
+            _soundManager.GetSnapShot(1).TransitionTo(.1f);
 
-        // Other logics
+        // Other logic
     }
 
     /// <summary>
     /// Whilst on Pause-state...
     /// Reduces Un-muted music(background).
     /// </summary>
-    void PauseState()
+    private void PauseState()
     {
-        if (isMusicSrcEnabled)
-            soundManager.GetSnapShot(2).TransitionTo(.1f);
+        if (_isMusicSrcEnabled)
+            _soundManager.GetSnapShot(2).TransitionTo(.1f);
 
-        // Other logics
+        // Other logic
     }
 
     /// <summary>
     /// A little delay before the game's state is set to 'Playing'
     /// </summary>
-    IEnumerator CountDown(float delay)
+    private IEnumerator CountDown(float delay)
     {
         yield return Utility.GetWaitForSeconds(delay);
 

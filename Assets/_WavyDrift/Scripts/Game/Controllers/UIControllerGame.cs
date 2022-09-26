@@ -10,86 +10,66 @@ using DG.Tweening;
 /// <summary>
 /// Handles certain stuffs relating the game's menu UI.
 /// </summary>
-public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
+internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
 {
     // Class Fields
-    int scoreCount;
+    private Animator _animator;
 
-    int diamondCount;
+    private ItemManager _itemManager;
 
-    int diamondRespawnCount = 1;
+    private int _scoreCount;
 
-    int coinCount;
+    private int _diamondCount;
 
-    int best;
+    private int _diamondRespawnCount = 1;
 
-    int totalCoins;
+    private int _coinCount;
+
+    private int _best;
+
+    private int _totalCoins;
 
     public bool HasGhostPortion { get; private set; }
 
     public bool HasCoinMagnet { get; private set; }
 
-    Animator animator;
-
-    ItemManager itemManager;
 
     // Inspector Fields
-    [Header("Texts")]
+    [Header("Texts"), SerializeField] private TextMeshProUGUI scoreT;
 
-    [SerializeField]
-    TextMeshProUGUI scoreT;
+    [SerializeField] private TextMeshProUGUI coinT;
 
-    [SerializeField]
-    TextMeshProUGUI coinT;
+    [SerializeField] private TextMeshProUGUI diamondT;
 
-    [SerializeField]
-    TextMeshProUGUI diamondT;
+    [SerializeField] private TextMeshProUGUI diamondRespawnT;
 
-    [SerializeField]
-    TextMeshProUGUI diamondRespawnT;
+    [SerializeField] private TextMeshProUGUI bestT;
 
-    [SerializeField]
-    TextMeshProUGUI bestT;
+    [Header("Images"), Space(10),]
 
+    [SerializeField] private Image pauseResumeI;
 
-    [Header("Images")]
-    [Space(10)]
+    [Space(5), SerializeField] private Image[] collectibleTopImages;
 
-    [SerializeField]
-    Image pauseResumeI;
+    [Space(5), SerializeField] private Sprite[] pauseResumeSprites;
 
-    [Space(5)]
+    [Space(5), SerializeField] private AudioClip triggerClip;
 
-    [SerializeField]
-    Image[] collectibleTopImages;
+    [Space(5), SerializeField] private CanvasGroup scoreCg;
 
-    [Space(5)]
-
-    [SerializeField]
-    Sprite[] pauseResumeSprites;
-
-    [Space(5)]
-
-    [SerializeField]
-    AudioClip triggerClip;
-
-    [Space(5)]
-
-    [SerializeField]
-    CanvasGroup scoreCG;
 
     protected override void Awake()
     {
         base.Awake();
 
-        itemManager = ItemManager.Instance;
+        _itemManager = ItemManager.Instance;
 
         RetrieveSaves();
     }
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
 
         if (HasCoinMagnet)
             SetTopImagesOpacity(0);
@@ -105,35 +85,35 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// </summary>
     public void RetrieveSaves()
     {
-        diamondCount = SaveSystem.GetData<int>("Diamond");
+        _diamondCount = SaveSystem.GetData<int>("Diamond");
 
         SetDiamondT(0);
 
-        totalCoins = SaveSystem.GetData<int>("TotalCoins");
+        _totalCoins = SaveSystem.GetData<int>("TotalCoins");
 
-        best = SaveSystem.GetData<int>("BestScore");
+        _best = SaveSystem.GetData<int>("BestScore");
 
-        HasCoinMagnet = itemManager.CollectibleItem.GetItemByName(CollectibleName.Coin_Magnet).IsUnlocked;
+        HasCoinMagnet = _itemManager.CollectibleItem.GetItemByName(CollectibleName.CoinMagnet).IsUnlocked;
 
-        HasGhostPortion = itemManager.CollectibleItem.GetItemByName(CollectibleName.Ghost_Portion).IsUnlocked;
+        HasGhostPortion = _itemManager.CollectibleItem.GetItemByName(CollectibleName.GhostPortion).IsUnlocked;
     }
 
     /// <summary>
     /// Saves all data on game over.
     /// </summary>
-    void SaveOnGameOver()
+    private void SaveOnGameOver()
     {
-        SaveSystem.SaveData("TotalCoins", totalCoins + coinCount);
+        SaveSystem.SaveData("TotalCoins", _totalCoins + _coinCount);
 
         SaveSystem.SaveData("BestScore", SetBest);
 
-        SaveSystem.SaveData("Diamond", diamondCount);
+        SaveSystem.SaveData("Diamond", _diamondCount);
     }
 
     /// <summary>
     /// Calculates player's best score from the their current score.
     /// </summary>
-    int SetBest => scoreCount > best ? scoreCount : best;
+    private int SetBest => _scoreCount > _best ? _scoreCount : _best;
 
     /// <summary>
     /// Callback(listener) to game's current state from game manager(publisher).
@@ -152,7 +132,7 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
                 break;
 
             case GameStates.DestroyWait:
-                diamondRespawnT.SetText("{0}", diamondRespawnCount);
+                diamondRespawnT.SetText("{0}", _diamondRespawnCount);
                 break;
         }
     }
@@ -163,10 +143,7 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// <param name="isPaused">is game paused or not?</param>
     public void SetPauseImage(bool isPaused)
     {
-        if (isPaused)
-            pauseResumeI.sprite = pauseResumeSprites[1];
-        else
-            pauseResumeI.sprite = pauseResumeSprites[0];
+        pauseResumeI.sprite = isPaused ? pauseResumeSprites[1] : pauseResumeSprites[0];
     }
 
     /// <summary>
@@ -177,12 +154,12 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// <param name="score">Value to add up</param>
     public void SetScoreT(int score)
     {
-        scoreCount += score;
+        _scoreCount += score;
 
-        if (scoreCount % 50 == 0)
+        if (_scoreCount % 50 == 0)
             SoundManager.Instance.PlaySfx(triggerClip);
 
-        scoreT.SetText("{0}", scoreCount);
+        scoreT.SetText("{0}", _scoreCount);
 
         ScoreAnim();
     }
@@ -193,17 +170,17 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// <param name="amt">Value to add up</param>
     public void SetCoinT(int amt)
     {
-        coinCount += amt;
+        _coinCount += amt;
 
-        coinT.SetText("{0}", coinCount);
+        coinT.SetText("{0}", _coinCount);
     }
 
     // Just as (SetCoinsT); in this case player's diamond.
     public void SetDiamondT(int amt)
     {
-        diamondCount += amt;
+        _diamondCount += amt;
 
-        diamondT.SetText("{0}", diamondCount);
+        diamondT.SetText("{0}", _diamondCount);
     }
 
     /// <summary>
@@ -213,19 +190,17 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// <param name="paramName">Animator parameter name</param>
     public void EnableGameover(string paramName)
     {
-        animator.SetTrigger(Utility.AnimatorId(paramName));
+        _animator.SetTrigger(Utility.AnimatorId(paramName));
     }
 
     /// <summary>
     /// Animates player's score as it changes.
     /// </summary>
-    void ScoreAnim()
+    private void ScoreAnim()
     {
-        scoreCG.alpha = 1f;
+        scoreCg.alpha = 1f;
 
-        scoreCG.DOFade(0f, .5f);
-
-        //animator.SetTrigger(Utility.AnimatorId("Score"));
+        scoreCg.DOFade(0f, .5f);
     }
 
 
@@ -239,7 +214,7 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
         {
             GameManager.Instance.SetGameState(GameStates.Respawn);
 
-            diamondRespawnCount++;
+            _diamondRespawnCount++;
         }
     }
 
@@ -257,13 +232,13 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// Does player have enough diamond to begin with?
     /// </summary>
     /// <returns>true otherwise false</returns>
-    bool RespawnWithDiamond()
+    private bool RespawnWithDiamond()
     {
-        if (diamondRespawnCount > diamondCount)
+        if (_diamondRespawnCount > _diamondCount)
             return false;
 
         // Decrement player's total diamonds
-        diamondCount -= diamondRespawnCount;
+        _diamondCount -= _diamondRespawnCount;
 
         // Update diamond UI text
         SetDiamondT(0);
@@ -277,13 +252,16 @@ public class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     /// alias.
     /// </summary>
     /// <param name="index">Image index to choose from</param>
-    void SetTopImagesOpacity(int index)
+    private void SetTopImagesOpacity(int index)
     {
         var originalColor0 = collectibleTopImages[index].color;
         var originalColor1 = collectibleTopImages[index].color;
 
-        collectibleTopImages[index].color = new Color(originalColor0.r, originalColor0.g, originalColor0.b, 255f);
-        collectibleTopImages[index].color = new Color(originalColor1.r, originalColor1.g, originalColor1.b, 255f);
+        originalColor0.a = 1;
+        originalColor1.a = 1;
+
+        collectibleTopImages[index].color = originalColor0;
+        collectibleTopImages[index].color = originalColor1;
     }
 
     /// <summary>

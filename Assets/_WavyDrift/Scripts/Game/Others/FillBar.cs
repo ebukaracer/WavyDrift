@@ -6,11 +6,11 @@ using UnityEngine.UI;
 /// <summary>
 /// Encapsulates various UI Fill-bars and their fill amount.
 /// </summary>
-public class FillBar : MonoBehaviour
+internal class FillBar : MonoBehaviour
 {
-    Image fill;
+    private Image _fill;
 
-    IEnumerator startDecreaseCache;
+    private IEnumerator _startDecreaseCache;
 
 
     [field: SerializeField]
@@ -22,9 +22,9 @@ public class FillBar : MonoBehaviour
 
     private void Awake()
     {
-        fill = GetComponent<Image>();
+        _fill = GetComponent<Image>();
 
-        fill.fillAmount = 0;
+        _fill.fillAmount = 0;
     }
 
     /// <summary>
@@ -33,28 +33,28 @@ public class FillBar : MonoBehaviour
     public void DecreaseFill()
     {
         // Overwrites the existing coroutine instead of waiting for it to finish.
-        if (startDecreaseCache != null)
-            StopCoroutine(startDecreaseCache);
+        if (_startDecreaseCache != null)
+            StopCoroutine(_startDecreaseCache);
 
-        startDecreaseCache = StartDecrease();
+        _startDecreaseCache = StartDecrease();
 
-        StartCoroutine(startDecreaseCache);
+        StartCoroutine(_startDecreaseCache);
     }
 
     /// <summary>
     /// See: <see cref="DecreaseFill"/>.
     /// This function would return immediately if <see cref="IsStopRoutine"/> is true.
     /// </summary>
-    IEnumerator StartDecrease()
+    private IEnumerator StartDecrease()
     {
         // Before decreasing, notify listeners
         OnDecreaseStarted?.Invoke();
 
-        fill.fillAmount = 1f;
+        _fill.fillAmount = 1f;
 
         var end = Time.time + DecreaseTime;
 
-        var changeRate = fill.fillAmount / DecreaseTime;
+        var changeRate = _fill.fillAmount / DecreaseTime;
 
         // While decreasing
         while (Time.time < end)
@@ -62,7 +62,7 @@ public class FillBar : MonoBehaviour
             if (IsStopRoutine)
                 yield break;
 
-            fill.fillAmount -= changeRate * Time.smoothDeltaTime;
+            _fill.fillAmount -= changeRate * Time.smoothDeltaTime;
 
             yield return null;
         }

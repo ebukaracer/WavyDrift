@@ -4,60 +4,52 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerItemController : MonoBehaviour
+internal class PlayerItemController : MonoBehaviour
 {
-    int pageIndex;
+    private int _pageIndex;
 
-    int itemCount;
+    private int _itemCount;
 
-    ItemManager itemManager;
+    private ItemManager _itemManager;
 
-    PlayerStore currentlySelectedItem;
+    private PlayerStore _currentlySelectedItem;
 
-    UIControllerMain uiControllerMain;
+    private UIControllerMain _uiControllerMain;
 
     public event Action OnHasPurchasedItem;
 
     [Header("Images")]
 
     [SerializeField]
-    Image currentItemSprite;
+    private Image currentItemSprite;
 
     // Coins/Diamonds
-    [SerializeField]
-    Image unlockToken;
+    [SerializeField] private Image unlockToken;
 
-    [SerializeField]
-    Sprite unlockPadlock;
+    [SerializeField] private Sprite unlockPadlock;
 
-    [SerializeField]
-    Sprite usingCheckmark;
+    [SerializeField] private Sprite usingCheckmark;
 
-    [Header("Texts")]
-    [Space(10)]
+    [Header("Texts"), Space(10)]
 
-    [SerializeField]
-    TextMeshProUGUI currentItemTokenAmtT;
+    [SerializeField] private TextMeshProUGUI currentItemTokenAmtT;
 
-    [SerializeField]
-    TextMeshProUGUI currentItemDescriptionT;
+    [SerializeField] private TextMeshProUGUI currentItemDescriptionT;
 
-    [SerializeField]
-    TextMeshProUGUI currentItemNameT;
+    [SerializeField] private TextMeshProUGUI currentItemNameT;
 
-    [SerializeField]
-    TextMeshProUGUI equipT;
+    [SerializeField] private TextMeshProUGUI equipT;
 
     private void Start()
     {
-        itemManager = ItemManager.Instance;
+        _itemManager = ItemManager.Instance;
 
-        uiControllerMain = UIControllerMain.Instance;
+        _uiControllerMain = UIControllerMain.Instance;
 
 
-        itemCount = itemManager.PlayerItem.GetItemCount;
+        _itemCount = _itemManager.PlayerItem.GetItemCount;
 
-        SetRetrievedItemProperties(GetPlayer(pageIndex));
+        SetRetrievedItemProperties(GetPlayer(_pageIndex));
 
         AvailableItemNotify();
     }
@@ -65,9 +57,9 @@ public class PlayerItemController : MonoBehaviour
     /// <summary>
     /// Gets a 'PlayerItem' from 'ItemManager' by its index.
     /// </summary>
-    /// <param name="i">Index of 'PlayerItem' to retrieve.</param>
+    /// <param name="index">Index of 'PlayerItem' to retrieve.</param>
     /// <returns>Item</returns>
-    PlayerStore GetPlayer(int index) => itemManager.PlayerItem.GetItemByIndex(index);
+    private PlayerStore GetPlayer(int index) => _itemManager.PlayerItem.GetItemByIndex(index);
 
     /// <summary>
     /// Returns the next item.
@@ -75,12 +67,12 @@ public class PlayerItemController : MonoBehaviour
     /// </summary>
     public void NextItem()
     {
-        if (pageIndex >= itemCount - 1)
+        if (_pageIndex >= _itemCount - 1)
             return;
 
-        pageIndex++;
+        _pageIndex++;
 
-        SetRetrievedItemProperties(GetPlayer(pageIndex));
+        SetRetrievedItemProperties(GetPlayer(_pageIndex));
     }
 
     /// <summary>
@@ -89,12 +81,12 @@ public class PlayerItemController : MonoBehaviour
     /// </summary>
     public void PreviousItem()
     {
-        if (pageIndex <= 0)
+        if (_pageIndex <= 0)
             return;
 
-        pageIndex--;
+        _pageIndex--;
 
-        SetRetrievedItemProperties(GetPlayer(pageIndex));
+        SetRetrievedItemProperties(GetPlayer(_pageIndex));
     }
 
     /// <summary>
@@ -109,7 +101,7 @@ public class PlayerItemController : MonoBehaviour
 
         currentItemDescriptionT.text = retrievedItem.Description;
 
-        currentlySelectedItem = retrievedItem;
+        _currentlySelectedItem = retrievedItem;
 
 
         // Not purchased yet
@@ -140,40 +132,40 @@ public class PlayerItemController : MonoBehaviour
     {
         UseItem();
 
-        if (currentlySelectedItem.IsPurchased)
+        if (_currentlySelectedItem.IsPurchased)
             return;
 
         // Check item's coins/diamond < player's total coins/diamond.
-        switch (currentlySelectedItem.UnlockTokenName)
+        switch (_currentlySelectedItem.UnlockTokenName)
         {
             case UnlockTokenName.Coins:
-                if (currentlySelectedItem.TokenAmount <= uiControllerMain.CoinsCount)
+                if (_currentlySelectedItem.TokenAmount <= _uiControllerMain.CoinsCount)
                 {
                     // Purchase
-                    uiControllerMain.UpdateCoins(currentlySelectedItem.TokenAmount);
+                    _uiControllerMain.UpdateCoins(_currentlySelectedItem.TokenAmount);
 
                     Equip();
                 }
                 else
-                    uiControllerMain.ShowInfoTip($"You don't have enough Coins to purchase this item!");
+                    _uiControllerMain.ShowInfoTip($"You don't have enough Coins to purchase this item!");
                 break;
 
             // Check item's diamond/best-score < player's total diamond/best-score.
             case UnlockTokenName.Diamonds:
-                if (currentlySelectedItem.TokenAmount <= uiControllerMain.DiamondCount)
+                if (_currentlySelectedItem.TokenAmount <= _uiControllerMain.DiamondCount)
                 {
-                    if (currentlySelectedItem.DesiredBest <= uiControllerMain.BestCount)
+                    if (_currentlySelectedItem.DesiredBest <= _uiControllerMain.BestCount)
                     {
                         // Purchase
-                        uiControllerMain.UpdateDiamonds(currentlySelectedItem.TokenAmount);
+                        _uiControllerMain.UpdateDiamonds(_currentlySelectedItem.TokenAmount);
 
                         Equip();
                     }
                     else
-                        uiControllerMain.ShowInfoTip($"You must reach a best score of {currentlySelectedItem.DesiredBest} to purchase this item!");
+                        _uiControllerMain.ShowInfoTip($"You must reach a best score of {_currentlySelectedItem.DesiredBest} to purchase this item!");
                 }
                 else
-                    uiControllerMain.ShowInfoTip($"You don't have enough Diamonds to purchase this item!");
+                    _uiControllerMain.ShowInfoTip($"You don't have enough Diamonds to purchase this item!");
                 break;
 
             default:
@@ -188,10 +180,10 @@ public class PlayerItemController : MonoBehaviour
     private void Equip()
     {
         // Update status
-        currentlySelectedItem.IsPurchased = true;
+        _currentlySelectedItem.IsPurchased = true;
 
         // Save
-        SaveSystem.SaveData($"Unlocked_{currentlySelectedItem.Title}", currentlySelectedItem.IsPurchased);
+        SaveSystem.SaveData($"Unlocked_{_currentlySelectedItem.Title}", _currentlySelectedItem.IsPurchased);
 
         // Notify others
         OnHasPurchasedItem?.Invoke();
@@ -207,18 +199,18 @@ public class PlayerItemController : MonoBehaviour
     /// <summary>
     /// Pop-out that shows details about the equipped item's properties.
     /// </summary>
-    void DisplayInfoForEquippedItem()
+    private void DisplayInfoForEquippedItem()
     {
-        switch (currentlySelectedItem.CollectibleNameToUnlock)
+        switch (_currentlySelectedItem.CollectibleNameToUnlock)
         {
-            case CollectibleName.Coin_Magnet:
-                uiControllerMain.ShowInfoTip("You have successfully unlocked coin magnet, access by navigating to unlocks tab");
+            case CollectibleName.CoinMagnet:
+                _uiControllerMain.ShowInfoTip("You have successfully unlocked coin magnet, access by navigating to unlocks tab");
                 break;
-            case CollectibleName.Ghost_Portion:
-                uiControllerMain.ShowInfoTip("You have successfully unlocked ghost portion, access by navigating to unlocks tab");
+            case CollectibleName.GhostPortion:
+                _uiControllerMain.ShowInfoTip("You have successfully unlocked ghost portion, access by navigating to unlocks tab");
                 break;
-            case CollectibleName.Coin_Multiplier:
-                uiControllerMain.ShowInfoTip("You have successfully unlocked coin multiplier, access by navigating to unlocks tab");
+            case CollectibleName.CoinMultiplier:
+                _uiControllerMain.ShowInfoTip("You have successfully unlocked coin multiplier, access by navigating to unlocks tab");
                 break;
         }
     }
@@ -239,26 +231,26 @@ public class PlayerItemController : MonoBehaviour
     /// Returns; if an item isn't equipped yet.
     /// Disables other items being used and uses the currently selected item.
     /// </summary>
-    void UseItem()
+    private void UseItem()
     {
         // Checks if item is already equipped/being used.
-        if (!currentlySelectedItem.IsPurchased || currentlySelectedItem.IsUsing)
+        if (!_currentlySelectedItem.IsPurchased || _currentlySelectedItem.IsUsing)
             return;
 
         // Start using item
-        currentlySelectedItem.IsUsing = true;
+        _currentlySelectedItem.IsUsing = true;
 
         unlockToken.sprite = usingCheckmark;
 
-        SaveSystem.SaveData($"Using_{currentlySelectedItem.Title}", currentlySelectedItem.IsUsing);
+        SaveSystem.SaveData($"Using_{_currentlySelectedItem.Title}", _currentlySelectedItem.IsUsing);
 
 
         // Stop using other items
-        for (int i = 0; i < itemCount; i++)
+        for (int i = 0; i < _itemCount; i++)
         {
             var thisItem = GetPlayer(i);
 
-            if (thisItem == currentlySelectedItem)
+            if (thisItem == _currentlySelectedItem)
                 continue;
 
             thisItem.IsUsing = false;
@@ -277,27 +269,27 @@ public class PlayerItemController : MonoBehaviour
     /// <summary>
     /// Notification on start, for item/s available for purchase.
     /// </summary>
-    void AvailableItemNotify()
+    private void AvailableItemNotify()
     {
-        for (int i = 0; i < itemCount; i++)
+        for (int i = 0; i < _itemCount; i++)
         {
             var item = GetPlayer(i);
 
             if (item.IsPurchased || item.IsUsing)
                 continue;
 
-            if (item.UnlockTokenName.Equals(UnlockTokenName.Coins) && item.TokenAmount <= uiControllerMain.CoinsCount)
+            if (item.UnlockTokenName.Equals(UnlockTokenName.Coins) && item.TokenAmount <= _uiControllerMain.CoinsCount)
             {
-                uiControllerMain.ShowInfoTip($"Item(s) available for purchase!");
+                _uiControllerMain.ShowInfoTip($"Item(s) available for purchase!");
 
                 break;
             }
 
-            if ((item.UnlockTokenName.Equals(UnlockTokenName.Diamonds) && item.DesiredBest <= uiControllerMain.BestCount))
+            if ((item.UnlockTokenName.Equals(UnlockTokenName.Diamonds) && item.DesiredBest <= _uiControllerMain.BestCount))
             {
-                if (item.TokenAmount <= uiControllerMain.DiamondCount)
+                if (item.TokenAmount <= _uiControllerMain.DiamondCount)
                 {
-                    uiControllerMain.ShowInfoTip($"Item(s) available for purchase!");
+                    _uiControllerMain.ShowInfoTip($"Item(s) available for purchase!");
 
                     break;
                 }

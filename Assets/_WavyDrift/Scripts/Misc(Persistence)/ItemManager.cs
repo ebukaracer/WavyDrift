@@ -10,7 +10,7 @@ using UnityEngine;
 /// Holds a reference to all the items available in the shop-menu.
 /// See also: <seealso cref="ItemInitializer"/>.
 /// </summary>
-class ItemManager : SingletonPattern.Singleton<ItemManager>
+internal class ItemManager : SingletonPattern.Singleton<ItemManager>
 {
     [field: SerializeField]
     public PlayerItem PlayerItem { get; private set; }
@@ -32,10 +32,9 @@ class ItemManager : SingletonPattern.Singleton<ItemManager>
 /// See also: <seealso cref="CollectibleStore"/>.
 /// </summary>
 [Serializable]
-class CollectibleItem
+internal class CollectibleItem
 {
-    [SerializeField]
-    List<CollectibleStore> collectibles;
+    [SerializeField] private List<CollectibleStore> collectibles;
 
 
     /// <summary>
@@ -104,10 +103,9 @@ class CollectibleItem
 /// See also: <seealso cref="PlayerStore"/>.
 /// </summary>
 [Serializable]
-class PlayerItem
+internal class PlayerItem
 {
-    [SerializeField]
-    List<PlayerStore> items;
+    [SerializeField] private List<PlayerStore> items;
 
     /// <summary>
     /// This returns an item based on how it's assigned and ordered in the list.

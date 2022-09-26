@@ -4,11 +4,11 @@ using Racer.Utilities;
 /// <summary>
 /// Spawns and initializes a particular player-item on start.
 /// </summary>
-public class PlayerController : SingletonPattern.StaticInstance<PlayerController>
+internal class PlayerController : SingletonPattern.StaticInstance<PlayerController>
 {
-    GameObject playerToUse;
+    private GameObject _playerToUse;
 
-    public PlayerMovement PlayerMovement { get; private set; } = null;
+    public PlayerMovement PlayerMovement { get; private set; }
 
     protected override void Awake()
     {
@@ -18,7 +18,7 @@ public class PlayerController : SingletonPattern.StaticInstance<PlayerController
     }
 
 
-    void Setup()
+    private void Setup()
     {
         var itemManager = ItemManager.Instance;
 
@@ -27,18 +27,17 @@ public class PlayerController : SingletonPattern.StaticInstance<PlayerController
         {
             var item = itemManager.PlayerItem.GetItemByIndex(i);
 
-            if (item.IsUsing)
-            {
-                playerToUse = item.PlayerPrefab;
+            if (!item.IsUsing) continue;
 
-                break;
-            }
+            _playerToUse = item.PlayerPrefab;
+
+            break;
         }
 
-        if (playerToUse == null)
+        if (_playerToUse == null)
             return;
 
         // Assigns the instantiated player to 'PlayerMovement' reference.
-        PlayerMovement = Instantiate(playerToUse, transform).GetComponent<PlayerMovement>();
+        PlayerMovement = Instantiate(_playerToUse, transform).GetComponent<PlayerMovement>();
     }
 }

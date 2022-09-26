@@ -1,34 +1,30 @@
 ﻿using UnityEngine;
 
-public enum CollectibleName
+internal enum CollectibleName
 {
-    Null, Coin_Magnet, Ghost_Portion, Coin_Multiplier
+    Null, CoinMagnet, GhostPortion, CoinMultiplier
 }
 
 /// <summary>
 /// A store that accumulates all un-lockable collectibles.
-/// <see cref="CollectibleName.Coin_Multiplier"/> is an imaginary collectible.
+/// <see cref="CollectibleName.CoinMultiplier"/> is an imaginary collectible.
 /// </summary>
 [CreateAssetMenu(fileName = "Collectible_0", menuName = "Collectible")]
-public class CollectibleStore : ScriptableObject
+internal class CollectibleStore : ScriptableObject
 {
-    [SerializeField]
-    int id;
+    [SerializeField] private int id;
 
-    [SerializeField]
-    CollectibleName title;
+    [SerializeField] private CollectibleName title;
 
-    [SerializeField, Multiline]
-    string description;
+    [SerializeField, Multiline] private string description;
 
     [field: SerializeField, Space(10)]
     public int LevelPrice { get; set; }
 
     [SerializeField, Tooltip("Accepts same value as 'LevelPrice'.")]
-    int levelPriceCache;
+    private int levelPriceCache;
 
-    [SerializeField]
-    int perLevelPrice;
+    [SerializeField] private int perLevelPrice;
 
     /// <summary>
     /// The item's current level as it gets upgraded.
@@ -36,12 +32,10 @@ public class CollectibleStore : ScriptableObject
     [field: SerializeField, Space(10)]
     public int LevelIndex { get; set; }
 
-    [SerializeField]
-    int maxLevelIndex;
+    [SerializeField] private int maxLevelIndex;
 
 
-    [SerializeField, Space(10)]
-    int perResourceValue;
+    [SerializeField, Space(10)] private int perResourceValue;
 
     /// <summary>
     /// A value that it'd add to the item when unlocked and being used.
@@ -51,7 +45,7 @@ public class CollectibleStore : ScriptableObject
     public int ResourceValue { get; set; }
 
     [SerializeField, Tooltip("Accepts same value as resource value.")]
-    int resourceValueCache;
+    private int resourceValueCache;
 
 
     [field: SerializeField, Space(10)]
@@ -61,7 +55,7 @@ public class CollectibleStore : ScriptableObject
     public bool IsUpgradable { get; set; }
 
     [SerializeField, Tooltip("Accepts same value as IsUpgradable.")]
-    bool isUpgradableCache;
+    private bool isUpgradableCache;
 
     // Getters
     public int Id => id;
