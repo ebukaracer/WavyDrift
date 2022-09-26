@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Racer.Utilities
 {
+    /// <summary>
+    /// Restarts an android application.
+    /// </summary>
     public static class RestartAndroid
     {
         public static void Restart()
@@ -25,6 +28,5 @@ namespace Racer.Utilities
                 process.CallStatic("killProcess", pid);
             }
         }
-
     }
 }

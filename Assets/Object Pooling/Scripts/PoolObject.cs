@@ -1,36 +1,45 @@
 ﻿using UnityEngine;
 
-namespace GDTools.ObjectPooling
+namespace Racer.ObjectPooler
 {
     public class PoolObject : MonoBehaviour
     {
-        Pool pool;
+        private Pool _pool;
 
-        // <summary>
+        /// <summary>
         /// Initialized once in <see cref="Pool.InsertObjectToQueue"/>.
         /// Prevents multiple initialization from other scripts.
         /// </summary>
         public Pool Pool
         {
-            get => pool;
+            get => _pool;
 
             set
             {
-                if (pool == null)
-                    pool = value;
+                if (_pool == null)
+                    _pool = value;
                 else
-                    Debug.LogWarning($"Value [{nameof(pool)}] has already been assigned to, Ignoring...");
+                    Logging.LogWarning($"Value [{nameof(_pool)}] has already been assigned to, Ignoring...");
             }
         }
 
+        /// <summary>
+        /// De-spawns this object after a delay.
+        /// The De-spawned object is returned to the pool.
+        /// </summary>
+        /// <param name="delay">Time to elapse.</param>
         public virtual void InvokeDespawn(float delay)
         {
             Invoke(nameof(Despawn), delay);
         }
 
+        /// <summary>
+        /// De-spawns this object.
+        /// See also: <seealso cref="InvokeDespawn"/>
+        /// </summary>
         public virtual void Despawn()
         {
-            pool.DespawnObject(this);
+            _pool.DespawnObject(this);
         }
     }
 }

@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 
-class ObstacleController : MonoBehaviour
+internal class ObstacleController : MonoBehaviour
 {
-    int playerDistance;
+    private int _playerDistance;
 
-    int playerDistanceIndex = -1;
+    private int _playerDistanceIndex = -1;
 
-    Transform player;
+    private Transform _player;
 
-    [SerializeField]
-    ObstacleBunchSpawner obstacleBunchSpawner;
+    [SerializeField] private ObstacleBunchSpawner obstacleBunchSpawner;
 
     private void Start()
     {
-        player = PlayerController.Instance.PlayerMovement.transform;
+        _player = PlayerController.Instance.PlayerMovement.transform;
     }
 
     private void Update()
@@ -23,13 +22,12 @@ class ObstacleController : MonoBehaviour
 
     private void SpawnObstacle()
     {
-        playerDistance = (int)player.transform.position.z / obstacleBunchSpawner.NextSpawnPos;
+        _playerDistance = (int)_player.transform.position.z / obstacleBunchSpawner.NextSpawnPos;
 
-        if (playerDistanceIndex <= playerDistance)
-        {
-            obstacleBunchSpawner.PoolObstacleBunch();
+        if (_playerDistanceIndex > _playerDistance) return;
 
-            playerDistanceIndex++;
-        }
+        obstacleBunchSpawner.PoolObstacleBunch();
+
+        _playerDistanceIndex++;
     }
 }

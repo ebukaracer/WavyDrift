@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-class PauseController : MonoBehaviour
+internal class PauseController : MonoBehaviour
 {
-    bool hasPaused;
+    private bool _hasPaused;
 
     private void Update()
     {
@@ -15,27 +15,31 @@ class PauseController : MonoBehaviour
         if (GameManager.Instance.CurrentState != GameStates.Playing && GameManager.Instance.CurrentState != GameStates.Pause)
             return;
 
-        if (!hasPaused)
-            Pause();
-        else if (hasPaused)
-            Resume();
+        switch (_hasPaused)
+        {
+            case false:
+                Pause();
+                break;
+            case true:
+                Resume();
+                break;
+        }
     }
 
-    void Pause()
+    private void Pause()
     {
         GameManager.Instance.SetGameState(GameStates.Pause);
 
-        hasPaused = true;
+        _hasPaused = true;
 
-        // TODO: Inputs get registered one frame.
         Time.timeScale = 0;
     }
 
-    void Resume()
+    private void Resume()
     {
         GameManager.Instance.SetGameState(GameStates.Playing);
 
-        hasPaused = false;
+        _hasPaused = false;
 
         Time.timeScale = 1;
     }

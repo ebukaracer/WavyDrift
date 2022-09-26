@@ -1,25 +1,21 @@
-using System.Collections;
 using UnityEngine;
 
 
-public class MagnetorItem : MonoBehaviour
+internal class MagnetorItem : MonoBehaviour
 {
-    FillBar coinMagnetFill;
+    private FillBar _coinMagnetFill;
 
-    Transform ball;
+    private Transform _ball;
 
-    bool isCheck;
+    private bool _isCheck;
 
-    float distance = 0;
+    private float _distance = 0;
 
-    [SerializeField]
-    float maxTriggerDistance = 5f;
+    [SerializeField] private float maxTriggerDistance = 5f;
 
-    [SerializeField]
-    float speed;
+    [SerializeField] private float speed;
 
-    [SerializeField]
-    AnimationCurve animationCurve;
+    [SerializeField] private AnimationCurve animationCurve;
 
     private void Start()
     {
@@ -29,14 +25,14 @@ public class MagnetorItem : MonoBehaviour
         if (playerCollider == null)
             return;
 
-        coinMagnetFill = FillController.Instance.CoinMagnetFill;
+        _coinMagnetFill = FillController.Instance.CoinMagnetFill;
 
-        ball = playerCollider.gameObject.transform;
+        _ball = playerCollider.gameObject.transform;
 
 
-        coinMagnetFill.OnDecreaseStarted += CoinMagnetFill_OnDecreaseStarted;
+        _coinMagnetFill.OnDecreaseStarted += CoinMagnetFill_OnDecreaseStarted;
 
-        coinMagnetFill.OnDecreaseFinished += CoinMagnetFill_OnDecreaseFinished;
+        _coinMagnetFill.OnDecreaseFinished += CoinMagnetFill_OnDecreaseFinished;
     }
 
 
@@ -46,43 +42,43 @@ public class MagnetorItem : MonoBehaviour
         // TODO: you might decide to limit the amount of calls here if coins is farther away from player.
 
         // ...
-        if (!isCheck)
+        if (!_isCheck)
             return;
 
-        if (ball.position.z > transform.position.z + maxTriggerDistance)
+        if (_ball.position.z > transform.position.z + maxTriggerDistance)
             return;
 
-        distance = (transform.position - ball.position).z;
+        _distance = (transform.position - _ball.position).z;
 
-        if (distance <= maxTriggerDistance)
+        if (_distance <= maxTriggerDistance)
             StartMagnet();
     }
 
 
     public void StartMagnet()
     {
-        transform.position = Vector3.Lerp(transform.position, ball.position, animationCurve.Evaluate(speed * Time.deltaTime));
+        transform.position = Vector3.Lerp(transform.position, _ball.position, animationCurve.Evaluate(speed * Time.deltaTime));
     }
 
 
     private void CoinMagnetFill_OnDecreaseStarted()
     {
-        isCheck = true;
+        _isCheck = true;
     }
 
     private void CoinMagnetFill_OnDecreaseFinished()
     {
-        isCheck = false;
+        _isCheck = false;
     }
 
     private void OnDisable()
     {
-        if (coinMagnetFill == null)
+        if (_coinMagnetFill == null)
             return;
 
-        coinMagnetFill.OnDecreaseStarted += CoinMagnetFill_OnDecreaseStarted;
+        _coinMagnetFill.OnDecreaseStarted -= CoinMagnetFill_OnDecreaseStarted;
 
-        coinMagnetFill.OnDecreaseFinished += CoinMagnetFill_OnDecreaseFinished;
+        _coinMagnetFill.OnDecreaseFinished -= CoinMagnetFill_OnDecreaseFinished;
     }
 }
 

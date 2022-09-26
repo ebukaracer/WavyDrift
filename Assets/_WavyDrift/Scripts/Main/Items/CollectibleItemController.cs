@@ -1,55 +1,53 @@
+using System;
 using Racer.SaveSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CollectibleItemController : MonoBehaviour
+internal class CollectibleItemController : MonoBehaviour
 {
-    int collectibleCount;
+    private int _collectibleCount;
 
-    ItemManager itemManager;
+    private ItemManager _itemManager;
 
-    CollectibleStore currentlySelectedItem;
+    private CollectibleStore _currentlySelectedItem;
 
     // Script References
     [Header("Script ref")]
 
     [SerializeField]
-    PlayerItemController playerItemController;
+    private PlayerItemController playerItemController;
 
     // Texts
     [Header("Texts"), Space(10)]
 
     [SerializeField]
-    TextMeshProUGUI descriptionT;
+    private TextMeshProUGUI descriptionT;
 
-    [SerializeField]
-    TextMeshProUGUI priceT;
+    [SerializeField] private TextMeshProUGUI priceT;
 
-    [SerializeField]
-    TextMeshProUGUI currentLevelT;
+    [SerializeField] private TextMeshProUGUI currentLevelT;
 
     // Images
     [Header("Images"), Space(10)]
 
     [SerializeField]
-    Image priceTokenI;
+    private Image priceTokenI;
 
     // Buttons
     [Header("Buttons"), Space(10)]
 
     [SerializeField]
-    Button upgradeB;
+    private Button upgradeB;
 
-    [SerializeField]
-    Button[] collectibleBtns;
+    [SerializeField] private Button[] collectibleBtns;
 
 
     private void Start()
     {
-        itemManager = ItemManager.Instance;
+        _itemManager = ItemManager.Instance;
 
-        collectibleCount = itemManager.CollectibleItem.GetItemCount;
+        _collectibleCount = _itemManager.CollectibleItem.GetItemCount;
 
 
         upgradeB.onClick.AddListener(UpgradeItem);
@@ -64,8 +62,8 @@ public class CollectibleItemController : MonoBehaviour
     /// </summary>
     /// <param name="i">Index of the item to retrieve.</param>
     /// <returns>CollectibleItem</returns>
-    CollectibleStore GetCollectible(int i) =>
-        itemManager.CollectibleItem.GetItemByIndex(i);
+    private CollectibleStore GetCollectible(int i) =>
+        _itemManager.CollectibleItem.GetItemByIndex(i);
 
 
 
@@ -83,7 +81,7 @@ public class CollectibleItemController : MonoBehaviour
     /// <param name="index">Selected Item Index</param>
     public void Select(int index)
     {
-        currentlySelectedItem = GetCollectible(index);
+        _currentlySelectedItem = GetCollectible(index);
 
         DisplayCurrentItemInfo();
     }
@@ -91,15 +89,15 @@ public class CollectibleItemController : MonoBehaviour
     /// <summary>
     /// Displays Info about a selected item.
     /// </summary>
-    void DisplayCurrentItemInfo()
+    private void DisplayCurrentItemInfo()
     {
-        if (currentlySelectedItem.IsUpgradable)
+        if (_currentlySelectedItem.IsUpgradable)
         {
             ToggleUpgradeButton(true);
 
-            priceT.SetText("{0}", currentlySelectedItem.LevelPrice);
+            priceT.SetText("{0}", _currentlySelectedItem.LevelPrice);
 
-            currentLevelT.SetText("Level {0}", currentlySelectedItem.LevelIndex);
+            currentLevelT.SetText("Level {0}", _currentlySelectedItem.LevelIndex);
         }
         else
         {
@@ -110,17 +108,17 @@ public class CollectibleItemController : MonoBehaviour
             currentLevelT.text = "Max";
         }
 
-        descriptionT.text = currentlySelectedItem.Description;
+        descriptionT.text = _currentlySelectedItem.Description;
     }
 
     /// <summary>
     /// Upgrades an item, if certain conditions are met.
     /// This would persist till upgrade button is grayed out.
     /// </summary>
-    void UpgradeItem()
+    private void UpgradeItem()
     {
         // Unsuccessful
-        if (currentlySelectedItem.LevelPrice > UIControllerMain.Instance.DiamondCount)
+        if (_currentlySelectedItem.LevelPrice > UIControllerMain.Instance.DiamondCount)
         {
             UIControllerMain.Instance.ShowInfoTip("You don't have enough diamonds to upgrade this item!");
 
@@ -128,33 +126,33 @@ public class CollectibleItemController : MonoBehaviour
         }
 
         // Successful
-        UIControllerMain.Instance.UpdateDiamonds(currentlySelectedItem.LevelPrice);
+        UIControllerMain.Instance.UpdateDiamonds(_currentlySelectedItem.LevelPrice);
 
 
         // Keep upgrading...
-        currentlySelectedItem.LevelPrice += currentlySelectedItem.PerLevelPrice;
+        _currentlySelectedItem.LevelPrice += _currentlySelectedItem.PerLevelPrice;
 
-        currentlySelectedItem.LevelIndex++;
+        _currentlySelectedItem.LevelIndex++;
 
-        currentlySelectedItem.ResourceValue += currentlySelectedItem.PerResourceValue;
+        _currentlySelectedItem.ResourceValue += _currentlySelectedItem.PerResourceValue;
 
-        currentLevelT.SetText("Level {0}", currentlySelectedItem.LevelIndex);
+        currentLevelT.SetText("Level {0}", _currentlySelectedItem.LevelIndex);
 
-        priceT.SetText("{0}", currentlySelectedItem.LevelPrice);
+        priceT.SetText("{0}", _currentlySelectedItem.LevelPrice);
 
         // Saves upgraded item's data 
-        SaveSystem.SaveData($"{currentlySelectedItem.Title}_Level", currentlySelectedItem.LevelIndex);
+        SaveSystem.SaveData($"{_currentlySelectedItem.Title}_Level", _currentlySelectedItem.LevelIndex);
 
-        SaveSystem.SaveData($"{currentlySelectedItem.Title}_LevelPrice", currentlySelectedItem.LevelPrice);
+        SaveSystem.SaveData($"{_currentlySelectedItem.Title}_LevelPrice", _currentlySelectedItem.LevelPrice);
 
-        SaveSystem.SaveData($"{currentlySelectedItem.Title}_ResourceValue", currentlySelectedItem.ResourceValue);
+        SaveSystem.SaveData($"{_currentlySelectedItem.Title}_ResourceValue", _currentlySelectedItem.ResourceValue);
 
         // Has reached Max Level
-        if (currentlySelectedItem.LevelIndex >= currentlySelectedItem.MaxLevelIndex)
+        if (_currentlySelectedItem.LevelIndex >= _currentlySelectedItem.MaxLevelIndex)
         {
-            currentlySelectedItem.IsUpgradable = false;
+            _currentlySelectedItem.IsUpgradable = false;
 
-            SaveSystem.SaveData($"{currentlySelectedItem.Title}_IsUpgradable", currentlySelectedItem.IsUpgradable);
+            SaveSystem.SaveData($"{_currentlySelectedItem.Title}_IsUpgradable", _currentlySelectedItem.IsUpgradable);
 
             // Disables upgrade button.
             DisplayCurrentItemInfo();
@@ -162,18 +160,23 @@ public class CollectibleItemController : MonoBehaviour
     }
 
 
-    void ToggleUpgradeButton(bool state) => upgradeB.interactable = state;
+    private void ToggleUpgradeButton(bool state) => upgradeB.interactable = state;
 
     /// <summary>
     /// Enables a 'CollectibleItem' button, if its matching 'item' has been purchased.
     /// </summary>
-    void ToggleUnlockItem()
+    private void ToggleUnlockItem()
     {
-        for (int i = 0; i < collectibleCount; i++)
+        for (int i = 0; i < _collectibleCount; i++)
         {
             collectibleBtns[i].interactable =
                 GetCollectible(i).IsUnlocked = 
-                itemManager.PlayerItem.GetItemByIndex(i + 2).IsPurchased;
+                _itemManager.PlayerItem.GetItemByIndex(i + 2).IsPurchased;
         }
+    }
+
+    private void OnDisable()
+    {
+        playerItemController.OnHasPurchasedItem -= ItemsController_OnHasPurchasedItem;
     }
 }

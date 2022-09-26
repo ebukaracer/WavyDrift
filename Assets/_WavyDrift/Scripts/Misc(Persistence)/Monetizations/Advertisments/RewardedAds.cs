@@ -2,43 +2,43 @@ using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
-abstract class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+internal abstract class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    bool isAlreadyInitialized;
+    private bool _isAlreadyInitialized;
 
-    [SerializeField] string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
+    [SerializeField] private string androidAdUnitId = "Rewarded_Android";
+    [SerializeField] private string iOSAdUnitId = "Rewarded_iOS";
 
-    [SerializeField, Space(10)] Button _showAdButton;
+    [SerializeField, Space(10)] private Button showAdButton;
 
     // This will remain null for unsupported platforms
-    string _adUnitId = null;
+    private string _adUnitId = null;
 
-    void Awake()
+    private void Awake()
     {
         // Get the Ad Unit ID for the current platform:
 #if UNITY_IOS
-        _adUnitId = _iOSAdUnitId;
+        _adUnitId = iOSAdUnitId;
 #elif UNITY_ANDROID
-        _adUnitId = _androidAdUnitId;
+        _adUnitId = androidAdUnitId;
 #endif
 
         // Disable the button until the ad is ready to show:
-        _showAdButton.interactable = false;
+        showAdButton.interactable = false;
 
 
         if (Advertisement.isInitialized)
         {
             LoadAd();
 
-            isAlreadyInitialized = true;
+            _isAlreadyInitialized = true;
         }
     }
 
     // Load content to the Ad Unit:
     public void LoadAd()
     {
-        if (isAlreadyInitialized)
+        if (_isAlreadyInitialized)
             return;
 
         // IMPORTANT! Only load content AFTER initialization from 'AdsInitializer.cs'.
@@ -55,10 +55,10 @@ abstract class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShow
         if (adUnitId.Equals(_adUnitId))
 
             // Enable the button for users to click:
-            _showAdButton.interactable = true;
+            showAdButton.interactable = true;
         {
             // Configure the button to call the ShowAd() method when clicked:
-            _showAdButton.onClick.AddListener(ShowAd);
+            showAdButton.onClick.AddListener(ShowAd);
         }
     }
 
@@ -66,7 +66,7 @@ abstract class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShow
     public void ShowAd()
     {
         // Disable the button:
-        _showAdButton.interactable = false;
+        showAdButton.interactable = false;
 
         // Then show the ad:
         Advertisement.Show(_adUnitId, this);
@@ -107,9 +107,9 @@ abstract class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShow
 
     public void OnUnityAdsShowClick(string adUnitId) { }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         // Clean up the button listeners:
-        _showAdButton.onClick.RemoveAllListeners();
+        showAdButton.onClick.RemoveAllListeners();
     }
 }

@@ -2,10 +2,10 @@
 
 public enum CollectibleType
 {
-    Coin, Diamond, Coin_Magnet, Ghost_Portion
+    Coin, Diamond, CoinMagnet, GhostPortion
 }
 
-class Collectible : MonoBehaviour
+internal class Collectible : MonoBehaviour
 {
     public CollectibleType collectibleType;
 }

@@ -1,19 +1,19 @@
 ﻿using UnityEngine.Advertisements;
 
-class PopoutAdButton : RewardedAds
+internal class PopoutAdButton : RewardedAds
 {
     public override void OnUnityAdsAdLoaded(string adUnitId)
     {
         base.OnUnityAdsAdLoaded(adUnitId);
 
-        UIControllerMain.Instance.UITweens.DisplayAdBtnInterval();
+        UIControllerMain.Instance.UITween.DisplayAdBtnInterval();
     }
 
     public override void OnUnityAdsShowStart(string adUnitId)
     {
         base.OnUnityAdsShowStart(adUnitId);
 
-        UIControllerMain.Instance.UITweens.HideAdBtnInterval();
+        UIControllerMain.Instance.UITween.HideAdBtnInterval();
     }
 
     public override void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
@@ -22,7 +22,7 @@ class PopoutAdButton : RewardedAds
 
         UIControllerMain.Instance.UpdateDiamonds(1);
 
-        UIControllerMain.Instance.UITweens.HideAdBtnInterval();
+        UIControllerMain.Instance.UITween.HideAdBtnInterval();
     }
 
 

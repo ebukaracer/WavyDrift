@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Advertisements;
 
-class ContinuePlayAdBtn : RewardedAds
+internal class ContinuePlayAdBtn : RewardedAds
 {
     public override void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {

@@ -16,13 +16,15 @@ namespace Racer.Utilities
 
             protected virtual void Awake() => Instance = this as T;
 
-
+            /* This should be called last.
             private void OnApplicationQuit()
             {
+                Debug.Log("Destroyed Instance!");
                 Instance = null;
 
                 Destroy(gameObject);
             }
+            */
         }
 
         /// <summary>

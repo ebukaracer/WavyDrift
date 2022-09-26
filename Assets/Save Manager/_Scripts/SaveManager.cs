@@ -7,6 +7,7 @@ namespace Racer.SaveManager
     /// </summary>
     public class SaveManager : MonoBehaviour
     {
+        #region Save
         public static void SaveInt(string key, int value)
         {
             PlayerPrefs.SetInt(key, value);
@@ -26,7 +27,9 @@ namespace Racer.SaveManager
         {
             if (value) PlayerPrefs.SetInt(key, 1); else PlayerPrefs.SetInt(key, -1);
         }
+        #endregion
 
+        #region Retrieve
         public static int GetInt(string key, int defaultValue = default)
         {
             return PlayerPrefs.GetInt(key, defaultValue);
@@ -49,7 +52,9 @@ namespace Racer.SaveManager
 
             return defaultValue;
         }
+        #endregion
 
+        #region Modify
         public static bool Contains(string key)
         {
             return PlayerPrefs.HasKey(key);
@@ -64,5 +69,6 @@ namespace Racer.SaveManager
         {
             PlayerPrefs.DeleteAll();
         }
+        #endregion
     }
 }

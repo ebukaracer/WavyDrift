@@ -1,16 +1,13 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class Tweener : MonoBehaviour
+internal class Tweener : MonoBehaviour
 {
-    [SerializeField]
-    Ease easeType;
+    [SerializeField] private Ease easeType;
 
-    [SerializeField]
-    Vector3 endValue;
+    [SerializeField] private Vector3 endValue;
 
-    [SerializeField]
-    float duration;
+    [SerializeField] private float duration;
 
 }
 

@@ -6,25 +6,23 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 {
     private string _gameId;
 
-    [SerializeField] bool _testMode = true;
+    [SerializeField] private bool testMode = true;
 
-    [Space(10)]
+    [Space(10), SerializeField] private string androidGameId;
 
-    [SerializeField] string _androidGameId;
-    [SerializeField] string _iOSGameId;
+    [SerializeField] private string iOSGameId;
 
-    [Space(10), SerializeField]
-    RewardedAds rewardedAds;
+    [Space(10), SerializeField] private RewardedAds rewardedAds;
 
-    void Awake() => InitializeAds();
+    private void Awake() => InitializeAds();
 
     public void InitializeAds()
     {
         _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
-            ? _iOSGameId
-            : _androidGameId;
+            ? iOSGameId
+            : androidGameId;
 
-        Advertisement.Initialize(_gameId, _testMode, true, this);
+        Advertisement.Initialize(_gameId, testMode, true, this);
     }
 
     public void OnInitializationComplete()

@@ -2,10 +2,10 @@
 
 public enum DamageableType
 {
-    Danger, Asteriod
+    Danger, Asteroid
 }
 
-class Damageable : MonoBehaviour
+internal class Damageable : MonoBehaviour
 {
     public DamageableType damageableType;
 }

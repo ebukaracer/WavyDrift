@@ -8,7 +8,7 @@ namespace Racer.LoadManager
     /// Then in <see cref="AnimatorTask"/> or <see cref="CanvasGroupTask"/>, 
     /// Inherit from the custom class/es you created.
     /// </summary>
-    abstract class LoadTask : MonoBehaviour
+    internal abstract class LoadTask : MonoBehaviour
     {
         [Tooltip("The object to simulate the loading process.\nExample: A loading circle")]
         public GameObject loaderObject;

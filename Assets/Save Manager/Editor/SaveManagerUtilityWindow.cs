@@ -1,68 +1,56 @@
+# if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
 namespace Racer.SaveManager
 {
-    public class SaveManagerUtilityWindow : EditorWindow
+    internal class SaveManagerUtilityWindow : EditorWindow
     {
-        static string keyField;
-        static string[] multipleKeyValues;
-        const int WIDTH = 800;
+        private const string SaveKey = "SMUW_SearchCache";
+        private static string _keyField;
+        private static bool _shouldRetain;
+        private const int Width = 800;
 
         [MenuItem("Save_Manager/Save Utility Window")]
         public static void DisplayWindow()
         {
-            keyField = EditorPrefs.GetString("keyfield");
+            _keyField = EditorPrefs.GetString(SaveKey);
 
             var window = GetWindow<SaveManagerUtilityWindow>();
 
-            // Add tool-tip argument as well
             window.titleContent = new GUIContent("Save Utility Window");
 
             // Limit size of the window, non re-sizable
-            window.minSize = new Vector2(WIDTH, WIDTH / 2);
-            window.maxSize = new Vector2(WIDTH, WIDTH / 2);
+            window.minSize = new Vector2(Width, Width / 2);
+            window.maxSize = new Vector2(Width, Width / 2);
         }
 
         private void OnGUI()
         {
             EditorGUILayout.Space(10);
 
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(WIDTH));
-            EditorGUILayout.HelpBox("Input multiple keys by separating with comma(,) or space(' ').", MessageType.Info);
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(Width));
+            EditorGUILayout.HelpBox("Input multiple keys by separating with comma(,)", MessageType.Info);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);
 
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(WIDTH - 5));
-            keyField = EditorGUILayout.TextField("Key", keyField);
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(Width - 5));
+
+            _keyField = EditorGUILayout.TextField("Key", _keyField);
+
             if (GUILayout.Button(new GUIContent("Check value", "Checks if value associated with the provided key exists in save profile."),
                 GUILayout.MaxWidth(150)))
             {
-                multipleKeyValues = keyField.Split(',', ' ');
-
-                foreach (var value in multipleKeyValues)
-                {
-                    if (string.IsNullOrEmpty(value))
-                        continue;
-
-                    Logging.Log($"{value}: { SaveManager.Contains(value)}");
-                }
+                SaveUtility.CheckValue(_keyField);
             }
+
             if (GUILayout.Button(new GUIContent("Erase value", "Deletes value associated with the provided key from save profile."),
                 GUILayout.MaxWidth(150)))
             {
-                multipleKeyValues = keyField.Split(',', ' ');
-
-                foreach (var value in multipleKeyValues)
-                {
-                    if (!SaveManager.Contains(value) || string.IsNullOrEmpty(value))
-                        continue;
-
-                    SaveManager.ClearPref(value);
-                }
+                SaveUtility.EraseValue(_keyField);
             }
             EditorGUILayout.EndHorizontal();
 
@@ -70,20 +58,26 @@ namespace Racer.SaveManager
 
             GUILayout.Label("Other Settings", EditorStyles.boldLabel);
 
-            if (GUILayout.Button(new GUIContent("Erase all values", "Deletes all values from save profile.")))
-                SaveManager.ClearAllPrefs();
-
-
-            EditorGUILayout.Space(5);
-
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(WIDTH));
             EditorGUILayout.HelpBox("This would delete all data present in the save-profile.", MessageType.Info);
-            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button(new GUIContent("Erase all values", "Deletes all values from save profile.")))
+                SaveUtility.EraseAllValues();
+
+            EditorGUILayout.Space(15);
+
+            EditorGUILayout.HelpBox("Whether or not to preserve the Inputted Key-Value(s) every time this Window is opened.", MessageType.Info);
+            _shouldRetain = EditorGUILayout.Toggle("Retain Key Input(s)", _shouldRetain, GUILayout.MaxWidth(Width / 4));
         }
 
         private void OnDestroy()
         {
-            EditorPrefs.SetString("keyfield", keyField);
+            if (string.IsNullOrEmpty(_keyField))
+                return;
+
+            if (_shouldRetain)
+                EditorPrefs.SetString(SaveKey, _keyField);
+            else
+                EditorPrefs.DeleteKey(SaveKey);
         }
     }
 }
+#endif

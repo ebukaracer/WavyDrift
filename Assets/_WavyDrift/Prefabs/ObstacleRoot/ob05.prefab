@@ -55,7 +55,7 @@ MonoBehaviour:
   boundaryPrefab:
   - {fileID: 4682279488510078916}
   boundarySpawnAmount: 15
-  damageablesPrefab:
+  damageablePrefabs:
   - {fileID: 451422540076007969}
   - {fileID: 451422541550765902}
   yRange: 10
@@ -145,11 +145,23 @@ PrefabInstance:
       propertyPath: autoGrow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2624636841801962788, guid: eeb4757d7a1644b4aa9c572a17e97ad0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: 4473186642015269591, guid: 94aab0022d555a14e8fb70ca8b5d0ada,
+        type: 3}
     - target: {fileID: 2624636841943060555, guid: eeb4757d7a1644b4aa9c572a17e97ad0,
         type: 3}
       propertyPath: autoGrow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2624636841943060555, guid: eeb4757d7a1644b4aa9c572a17e97ad0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: -51173100022275630, guid: 755cf6475f2b8374987cb4c5e6875307,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeb4757d7a1644b4aa9c572a17e97ad0, type: 3}
 --- !u!4 &451422540906567697 stripped
@@ -194,6 +206,12 @@ PrefabInstance:
       propertyPath: autoGrow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5157335275306888178, guid: 2fb7d0eecb28eda41b75c97818d67db0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: 8376805939289015, guid: ff5a8cb33b1bfc645bb52fc734e3df35,
+        type: 3}
     - target: {fileID: 5157335275676998528, guid: 2fb7d0eecb28eda41b75c97818d67db0,
         type: 3}
       propertyPath: m_RootOrder
@@ -259,6 +277,12 @@ PrefabInstance:
       propertyPath: autoGrow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5157335275729457301, guid: 2fb7d0eecb28eda41b75c97818d67db0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: -3049050569224724607, guid: 75affe35080d17d4ea9c3bcdfa675f98,
+        type: 3}
     - target: {fileID: 5157335275782780060, guid: 2fb7d0eecb28eda41b75c97818d67db0,
         type: 3}
       propertyPath: autoGrow
@@ -269,11 +293,23 @@ PrefabInstance:
       propertyPath: capacity
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 5157335275782780060, guid: 2fb7d0eecb28eda41b75c97818d67db0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: -4089387240428174222, guid: c72802c9472e5e245a350c6e27c1682d,
+        type: 3}
     - target: {fileID: 5157335276306454711, guid: 2fb7d0eecb28eda41b75c97818d67db0,
         type: 3}
       propertyPath: autoGrow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5157335276306454711, guid: 2fb7d0eecb28eda41b75c97818d67db0,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: 3440232071397597780, guid: 27b52544835d2d44b8b791270c465695,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fb7d0eecb28eda41b75c97818d67db0, type: 3}
 --- !u!4 &7922659140056876920 stripped
@@ -457,6 +493,12 @@ PrefabInstance:
       propertyPath: capacity
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 2242038192466251116, guid: 2b1f9938afe0cf044b7ff37afb059929,
+        type: 3}
+      propertyPath: poolObjectPrefab
+      value: 
+      objectReference: {fileID: 2193579532258568528, guid: 8ab617c9a0f76e54d9749099f4179b7d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b1f9938afe0cf044b7ff37afb059929, type: 3}
 --- !u!4 &4682279489276594901 stripped
