@@ -19,13 +19,10 @@ internal class ObstacleController : MonoBehaviour
     {
         _playerDistance = (int)_player.transform.position.z / obstacleBunchSpawner.NextSpawnPos;
 
-        //Debug.Log($"Player Distance: {playerDistance}, Player Distance Index: {playerDistanceIndex}");
+        if (_playerDistanceIndex == _playerDistance) return;
 
-        if (_playerDistanceIndex != _playerDistance)
-        {
-            obstacleBunchSpawner.SpawnObstacleBunch();
+        obstacleBunchSpawner.SpawnObstacleBunch();
 
-            _playerDistanceIndex = _playerDistance;
-        }
+        _playerDistanceIndex = _playerDistance;
     }
 }

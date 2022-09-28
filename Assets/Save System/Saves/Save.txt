@@ -1,5 +1,0 @@
-{
-  "KeyValues": {
-    "Using_Wavyball": true
-  }
-}

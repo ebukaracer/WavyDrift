@@ -4,42 +4,58 @@ internal class ObstacleBunchSpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] obstaclePrefabs;
 
-    [Space(10f)]
+    // Dynamic field
+    [Space(10f), SerializeField]
+    private int initialSpawnPos = 30;
 
-    // Dynamic
-    [SerializeField]
-    private float initialSpawnPos = 30f;
+    [field: SerializeField] public int NextSpawnPos { get; set; } = 260;
 
-    [field: SerializeField]
-    public int NextSpawnPos { get; set; }
 
+    // Editor/Play Mode
     [ContextMenu("Spawn Obstacle Bunch")]
     public void SpawnObstacleBunch()
     {
-        Instantiate(obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)],
+        Instantiate(obstaclePrefabs[Random.Range(0, GetSpawnIndex())],
             new Vector3(0, 0, initialSpawnPos),
             Quaternion.identity, transform);
 
         initialSpawnPos += NextSpawnPos;
     }
 
-    
-
+    // Editor Mode
     [ContextMenu("Clear Obstacle Bunch")]
     private void ClearObstacleBunch()
     {
-        initialSpawnPos = 30f;
-
         if (transform.childCount <= 0)
         {
-            Debug.LogWarning($"[{transform.gameObject.name}]  is Empty!");
+            initialSpawnPos = 30;
+
+            Logging.LogWarning($"[{transform.gameObject.name}]  is Empty!");
 
             return;
         }
 
-        for (int i = transform.childCount - 1; i >= 0; i--)
+        for (int i = transform.childCount - 1; i >= 0;)
         {
             DestroyImmediate(transform.GetChild(i).gameObject);
+
+            initialSpawnPos -= NextSpawnPos;
+
+            break;
         }
+    }
+
+    private int GetSpawnIndex()
+    {
+        if (!Application.isPlaying)
+            return obstaclePrefabs.Length - 2;
+
+        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jetpackboy).IsPurchased)
+            return obstaclePrefabs.Length;
+
+        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jet).IsPurchased)
+            return obstaclePrefabs.Length - 1;
+
+        return obstaclePrefabs.Length - 2;
     }
 }

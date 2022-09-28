@@ -151,7 +151,7 @@ internal class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, tilt, Time.deltaTime * tiltSpeed);
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (Input.GetKeyUp(KeyCode.Space))
             _isPressed = true;
     }
 

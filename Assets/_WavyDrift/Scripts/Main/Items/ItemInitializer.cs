@@ -33,7 +33,7 @@ internal class ItemInitializer : MonoBehaviour
     /// <summary>
     /// Gets an item from 'ItemManager' by its index.
     /// </summary>
-    /// <param name="i">Index of the item to retrieve.</param>
+    /// <param name="index">Index of the item to retrieve.</param>
     /// <returns>PlayerItem</returns>
     private PlayerStore GetPlayer(int index) =>
         _itemManager.PlayerItem.GetItemByIndex(index);

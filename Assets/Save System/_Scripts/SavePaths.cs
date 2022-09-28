@@ -8,7 +8,7 @@ namespace Racer.SaveSystem
     internal static class SavePaths
     {
         // Modify your custom path here:
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
         public static string SaveDirectoryPath { get; } = $"{Application.dataPath}/Save System/Saves/";
 #endif
 #if !UNITY_EDITOR && UNITY_ANDROID

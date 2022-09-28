@@ -129,6 +129,7 @@ internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
             case GameStates.GameOver:
                 SaveOnGameOver();
                 bestT.SetText("{0}", SetBest);
+                scoreCg.alpha = 1f;
                 break;
 
             case GameStates.DestroyWait:

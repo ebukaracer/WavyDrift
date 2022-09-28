@@ -27,7 +27,7 @@ namespace Racer.SoundManager
         public Image parentIcon;
 
         // On/Off Sprites that'd be in-place of parent sprite.
-        [FormerlySerializedAs("offOnIcons")] public Sprite[] onOffIcons;
+        public Sprite[] onOffIcons;
 
 
         /// <summary>

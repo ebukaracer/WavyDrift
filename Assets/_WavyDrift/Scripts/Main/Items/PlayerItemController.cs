@@ -116,10 +116,7 @@ internal class PlayerItemController : MonoBehaviour
         // Purchased
         else
         {
-            if (retrievedItem.IsUsing)
-                unlockToken.sprite = usingCheckmark;
-            else
-                unlockToken.sprite = unlockPadlock;
+            unlockToken.sprite = retrievedItem.IsUsing ? usingCheckmark : unlockPadlock;
 
             UpdateSomeEquippedProperties();
         }
@@ -206,8 +203,8 @@ internal class PlayerItemController : MonoBehaviour
             case CollectibleName.CoinMagnet:
                 _uiControllerMain.ShowInfoTip("You have successfully unlocked coin magnet, access by navigating to unlocks tab");
                 break;
-            case CollectibleName.GhostPortion:
-                _uiControllerMain.ShowInfoTip("You have successfully unlocked ghost portion, access by navigating to unlocks tab");
+            case CollectibleName.GhostPortion: // Shield Portion == Ghost Portion
+                _uiControllerMain.ShowInfoTip("You have successfully unlocked shield portion, access by navigating to unlocks tab");
                 break;
             case CollectibleName.CoinMultiplier:
                 _uiControllerMain.ShowInfoTip("You have successfully unlocked coin multiplier, access by navigating to unlocks tab");

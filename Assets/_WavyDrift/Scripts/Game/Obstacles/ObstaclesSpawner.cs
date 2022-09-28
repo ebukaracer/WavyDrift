@@ -6,7 +6,7 @@ public class ObstaclesSpawner : MonoBehaviour
 {
     private Transform _player;
 
-    private float _startPos;
+    private int _startPos;
 
     [SerializeField] private Transform[] boundaryPrefab;
 
@@ -18,9 +18,9 @@ public class ObstaclesSpawner : MonoBehaviour
 
     [Space(15), SerializeField] private Transform[] damageablesPrefab;
 
-    [Space(10), SerializeField] private float yRange;
+    [Space(10), SerializeField] private float yRange = 10;
 
-    [SerializeField] private float zSpacing;
+    [SerializeField] private int zSpacing = 15;
 
     [SerializeField, Space(10)] private int autoDestroyLimit;
 
@@ -59,7 +59,8 @@ public class ObstaclesSpawner : MonoBehaviour
 
             index++;
 
-            _startPos += Random.Range(zSpacing, maxInclusive: zSpacing + 5);
+            // 15 -> 20
+            _startPos += Random.Range(zSpacing, zSpacing + 6);
         }
 
         _startPos = 0;
@@ -67,7 +68,7 @@ public class ObstaclesSpawner : MonoBehaviour
 
     private void SpawnCollectibles(Vector3 pos)
     {
-        var randomNum = Random.Range(0, maxInclusive: boundarySpawnAmount);
+        var randomNum = Random.Range(0, boundarySpawnAmount);
 
         switch (randomNum)
         {
@@ -99,7 +100,7 @@ public class ObstaclesSpawner : MonoBehaviour
 
     private void SpawnCoinMagnet(Vector3 pos)
     {
-        if (Application.isEditor || !spawnCollectibles)
+        if (!Application.isPlaying || !spawnCollectibles)
             return;
 
         if (ItemManager.Instance.CollectibleItem.GetItemByIndex(1).IsUnlocked)
@@ -108,7 +109,7 @@ public class ObstaclesSpawner : MonoBehaviour
 
     private void SpawnGhost(Vector3 pos)
     {
-        if (Application.isEditor || !spawnCollectibles)
+        if (!Application.isPlaying || !spawnCollectibles)
             return;
 
         if (ItemManager.Instance.CollectibleItem.GetItemByIndex(2).IsUnlocked)
@@ -150,7 +151,7 @@ public class ObstaclesSpawner : MonoBehaviour
 
         if (!obstaclesEnumerable.Any())
         {
-            Debug.LogWarning(($"[{transform.gameObject.name}]  is Empty!"));
+            Logging.LogWarning(($"[{transform.gameObject.name}]  is Empty!"));
 
             return;
         }

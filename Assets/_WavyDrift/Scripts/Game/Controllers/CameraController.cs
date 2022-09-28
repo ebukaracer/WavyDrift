@@ -1,6 +1,8 @@
-﻿using Racer.SoundManager;
+﻿using Racer.SaveManager;
+using Racer.SoundManager;
 using Racer.Utilities;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 /// <summary>
 /// Handles camera follow and flipping.
@@ -9,26 +11,29 @@ internal class CameraController : MonoBehaviour
 {
     private float _current, _target;
 
-    private Vector3 _offset, _desiredPos;
+    private PostProcessLayer _postProcessLayer;
 
+    private Vector3 _offset, _desiredPos;
     private Vector3 _goalRot, _initialRot;
 
     private Transform _player;
 
-    [Header("Follow")]
-
-    [SerializeField]
+    [Header("Follow"), SerializeField]
     private float followSpeed = 5;
 
-    [Header("Flipping")]
-
-    [Space(10), SerializeField]
+    [Header("Flipping"), Space(10), SerializeField]
     private float flipSpeed;
 
     [SerializeField] private AnimationCurve animationCurve;
 
     [SerializeField] private AudioClip flipSfx;
 
+    private void Awake()
+    {
+        _postProcessLayer = GetComponentInChildren<PostProcessLayer>();
+
+        _postProcessLayer.enabled = SaveManager.GetInt("PostCc") == 0;
+    }
 
     private void Start()
     {

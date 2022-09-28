@@ -9,7 +9,7 @@ internal class MagnetorItem : MonoBehaviour
 
     private bool _isCheck;
 
-    private float _distance = 0;
+    private float _distance;
 
     [SerializeField] private float maxTriggerDistance = 5f;
 
@@ -19,8 +19,7 @@ internal class MagnetorItem : MonoBehaviour
 
     private void Start()
     {
-        var playerCollider = PlayerController.Instance.PlayerMovement.GetComponent<PlayerCollider>();
-
+        var playerCollider = PlayerController.Instance.PlayerCollider;
 
         if (playerCollider == null)
             return;
