@@ -9,7 +9,6 @@ internal class ItemInitializer : MonoBehaviour
     private ItemManager _itemManager;
 
     private int _playerItemCount;
-
     private int _collectibleItemCount;
 
 
@@ -18,14 +17,10 @@ internal class ItemInitializer : MonoBehaviour
         _itemManager = ItemManager.Instance;
 
         _playerItemCount = _itemManager.PlayerItem.GetItemCount;
-
         _collectibleItemCount = _itemManager.CollectibleItem.GetItemCount;
 
-
         InitPurchasedPlayerItems();
-
         InitUsingPlayerItemOnStart();
-
         InitSavedCollectiblesProperties();
     }
 

@@ -15,7 +15,7 @@ internal class ObstacleBunchSpawner : MonoBehaviour
     [ContextMenu("Spawn Obstacle Bunch")]
     public void SpawnObstacleBunch()
     {
-        Instantiate(obstaclePrefabs[Random.Range(0, GetSpawnIndex())],
+        Instantiate(obstaclePrefabs[Random.Range(0, GetSpawnCount())],
             new Vector3(0, 0, initialSpawnPos),
             Quaternion.identity, transform);
 
@@ -45,7 +45,7 @@ internal class ObstacleBunchSpawner : MonoBehaviour
         }
     }
 
-    private int GetSpawnIndex()
+    private int GetSpawnCount()
     {
         if (!Application.isPlaying)
             return obstaclePrefabs.Length - 2;

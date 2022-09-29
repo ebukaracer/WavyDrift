@@ -238,6 +238,8 @@ namespace Racer.SaveSystem
 
                 File.Delete(saveFile);
 
+                _dataValues.KeyValues.Clear();
+
                 if (!string.IsNullOrEmpty(saveFileMeta))
                     File.Delete(saveFileMeta);
 

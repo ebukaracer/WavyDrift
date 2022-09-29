@@ -10,20 +10,13 @@ public class PlayerCollider : MonoBehaviour
     private int _multiplier = 1;
 
     private PlayerMovement _playerMovement;
-
     private Collectible _collectible;
-
-    // A kind of collectible
     private Damageable _damageable;
 
-    // PoolObject poolObject;
-
     private FillController _fillController;
-
     private ShardFxController _shardFxController;
 
     [SerializeField] private AudioClip collectibleClip;
-
 
 
     private void Start()
@@ -31,7 +24,6 @@ public class PlayerCollider : MonoBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
 
         _fillController = FillController.Instance;
-
         _shardFxController = ShardFxController.Instance;
 
         _fillController.GhostFill.OnDecreaseStarted += GhostFill_OnDecreaseStarted;
@@ -86,7 +78,8 @@ public class PlayerCollider : MonoBehaviour
             switch (_damageable.damageableType)
             {
                 case DamageableType.Danger:
-                    _fillController.DangerFill.DecreaseTime = Random.Range(5, 8);
+                    if (_fillController.DangerFill.IsRoutineBusy) return;
+                    _fillController.DangerFill.DecreaseTime = Random.Range(5, 9);
                     _fillController.DangerFill.DecreaseFill();
                     // Extra Logic
                     break;
@@ -127,6 +120,11 @@ public class PlayerCollider : MonoBehaviour
     private void GhostFill_OnDecreaseStarted()
     {
         _playerMovement.Init(_fillController.GhostFill.DecreaseTime);
+    }
+
+    private void OnDestroy()
+    {
+        _fillController.GhostFill.OnDecreaseStarted -= GhostFill_OnDecreaseStarted;
     }
 }
 

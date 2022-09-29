@@ -12,7 +12,8 @@ internal class PauseController : MonoBehaviour
 
     public void SetPause()
     {
-        if (GameManager.Instance.CurrentState != GameStates.Playing && GameManager.Instance.CurrentState != GameStates.Pause)
+        if (GameManager.Instance.CurrentState != GameStates.Playing &&
+            GameManager.Instance.CurrentState != GameStates.Pause)
             return;
 
         switch (_hasPaused)

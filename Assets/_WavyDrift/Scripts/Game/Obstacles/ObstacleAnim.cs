@@ -1,11 +1,13 @@
 using UnityEngine;
 
-
 internal class ObstacleAnim : MonoBehaviour
 {
-    private bool _isGameover;
     private Vector3 _startPos;
+    private Vector3 _currentPos;
 
+    private bool _isGameover;
+
+    [Header("MOTION")]
     [SerializeField] private float delta;
     [SerializeField] private float speed;
 
@@ -13,6 +15,7 @@ internal class ObstacleAnim : MonoBehaviour
     private void Start()
     {
         _startPos = transform.localPosition;
+        _currentPos = _startPos;
 
         GameManager.OnCurrentState += GameManager_OnCurrentState;
     }
@@ -27,11 +30,15 @@ internal class ObstacleAnim : MonoBehaviour
         if (_isGameover)
             return;
 
+        _currentPos = transform.localPosition;
+
         var newPos = _startPos;
 
         newPos.y += delta * Mathf.Sin(Time.time * speed);
 
-        transform.localPosition = new Vector3(transform.localPosition.x, newPos.y, transform.localPosition.z);
+        _currentPos = new Vector3(_currentPos.x, newPos.y, _currentPos.z);
+
+        transform.localPosition = _currentPos;
     }
 
     private void OnDestroy()

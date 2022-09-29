@@ -18,14 +18,12 @@ internal class CameraController : MonoBehaviour
 
     private Transform _player;
 
-    [Header("Follow"), SerializeField]
-    private float followSpeed = 5;
+    [Header("MOTION")]
+    [SerializeField] private float followSpeed = 5;
+    [SerializeField] private float flipSpeed;
 
-    [Header("Flipping"), Space(10), SerializeField]
-    private float flipSpeed;
-
+    [Header("OTHERS"), Space(5)]
     [SerializeField] private AnimationCurve animationCurve;
-
     [SerializeField] private AudioClip flipSfx;
 
     private void Awake()
@@ -39,12 +37,10 @@ internal class CameraController : MonoBehaviour
     {
         // Follow
         _player = PlayerController.Instance.PlayerMovement.transform;
-
         _offset = transform.position - _player.position;
 
         // Flipping
         _initialRot = Utility.CameraMain.transform.rotation.eulerAngles;
-
         _goalRot = new Vector3(_initialRot.x, _initialRot.y, 180);
     }
 

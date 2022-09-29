@@ -6,23 +6,21 @@ public class ObstaclesSpawner : MonoBehaviour
 {
     private Transform _player;
 
-    private int _startPos;
+    private int _startOffset;
+    private int _index;
+    private int _randomNum;
 
     [SerializeField] private Transform[] boundaryPrefab;
+    [SerializeField] private Transform[] damageablesPrefab;
+    [SerializeField] private Transform[] collectiblesPrefab;
 
+    [Space(5), Header("PLATFORM PROPERTIES")]
     [SerializeField] private int boundarySpawnAmount;
-
-    [Space(10), SerializeField] private Transform[] collectiblesPrefab;
-
-    [SerializeField] private bool spawnCollectibles = true;
-
-    [Space(15), SerializeField] private Transform[] damageablesPrefab;
-
-    [Space(10), SerializeField] private float yRange = 10;
-
+    [SerializeField] private float yRange = 10;
     [SerializeField] private int zSpacing = 15;
+    [SerializeField] private int autoDestroyLimit = 300;
 
-    [SerializeField, Space(10)] private int autoDestroyLimit;
+    [Space(5), SerializeField] private bool spawnCollectibles = true;
 
 
     private void Start()
@@ -38,32 +36,32 @@ public class ObstaclesSpawner : MonoBehaviour
     [ContextMenu("Spawn Obstacles")]
     private void SpawnObstacle()
     {
-        int index = 0;
+        _index = 0;
 
-        int randomNum = Random.Range(1, 4);
+        _randomNum = Random.Range(1, 4);
 
 
-        while (index < boundarySpawnAmount)
+        while (_index < boundarySpawnAmount)
         {
             var randomBoundary = boundaryPrefab[Random.Range(0, boundaryPrefab.Length)];
 
-            float yPos = Random.Range(-yRange, yRange);
+            var yPos = Random.Range(-yRange, yRange);
 
             var clone = Instantiate(randomBoundary,
-                new Vector3(0, yPos, transform.position.z + _startPos),
+                new Vector3(0, yPos, transform.position.z + _startOffset),
                 randomBoundary.rotation,
                 transform);
 
-            if (index % randomNum == 0)
+            if (_index % _randomNum == 0)
                 SpawnCollectibles(new Vector3(0, yPos, clone.position.z + 10f));
 
-            index++;
+            _index++;
 
             // 15 -> 20
-            _startPos += Random.Range(zSpacing, zSpacing + 6);
+            _startOffset += Random.Range(zSpacing, zSpacing + 6);
         }
 
-        _startPos = 0;
+        _startOffset = 0;
     }
 
     private void SpawnCollectibles(Vector3 pos)

@@ -4,15 +4,12 @@ using UnityEngine;
 internal class MagnetorItem : MonoBehaviour
 {
     private FillBar _coinMagnetFill;
-
     private Transform _ball;
 
     private bool _isCheck;
-
     private float _distance;
 
     [SerializeField] private float maxTriggerDistance = 5f;
-
     [SerializeField] private float speed;
 
     [SerializeField] private AnimationCurve animationCurve;
@@ -28,13 +25,9 @@ internal class MagnetorItem : MonoBehaviour
 
         _ball = playerCollider.gameObject.transform;
 
-
         _coinMagnetFill.OnDecreaseStarted += CoinMagnetFill_OnDecreaseStarted;
-
         _coinMagnetFill.OnDecreaseFinished += CoinMagnetFill_OnDecreaseFinished;
     }
-
-
 
     private void Update()
     {
@@ -53,12 +46,10 @@ internal class MagnetorItem : MonoBehaviour
             StartMagnet();
     }
 
-
     public void StartMagnet()
     {
         transform.position = Vector3.Lerp(transform.position, _ball.position, animationCurve.Evaluate(speed * Time.deltaTime));
     }
-
 
     private void CoinMagnetFill_OnDecreaseStarted()
     {
