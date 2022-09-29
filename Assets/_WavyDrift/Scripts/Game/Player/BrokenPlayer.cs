@@ -3,6 +3,7 @@ using Racer.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Enables a broken-player when required.
@@ -13,12 +14,13 @@ internal class BrokenPlayer : MonoBehaviour
 
     private FillBar _radialFill;
 
+    [Header("BROKEN PLAYER RIGIDBODIES"), Space(5)]
     [SerializeField] private List<Rigidbody> rb;
 
-    [SerializeField, Space(5)] private ParticleSystem ps;
+    [Header("PARTICLE FX"), Space(5)]
+    [FormerlySerializedAs("ps")][SerializeField] private ParticleSystem smokeFx;
 
-    [SerializeField, Space(5)] private float destroyDelay = 2.5f;
-
+    [SerializeField] private float destroyDelay = 2.5f;
     [SerializeField] private float explosionForce = 2500f;
 
     [SerializeField, Space(5)] private AudioClip decimateFx;
@@ -51,7 +53,7 @@ internal class BrokenPlayer : MonoBehaviour
 
         SoundManager.Instance.PlaySfx(decimateFx);
 
-        ps.Stop();
+        smokeFx.Stop();
 
         foreach (var rbs in rb)
         {

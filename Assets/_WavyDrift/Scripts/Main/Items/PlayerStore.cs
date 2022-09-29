@@ -12,12 +12,14 @@ internal enum UnlockTokenName { Coins, Diamonds }
 [CreateAssetMenu(fileName = "Player_0", menuName = "PlayerItem", order = 2)]
 internal class PlayerStore : ScriptableObject
 {
+    // Details
     [SerializeField] private int id;
 
     [SerializeField] private PlayerName title;
 
     [SerializeField, Multiline] private string description;
 
+    // Properties
     [SerializeField, Space(10)] private Sprite icon;
 
     [Space(10), SerializeField] private Sprite unlockTokenIcon;

@@ -13,55 +13,33 @@ internal class PlayerMovement : MonoBehaviour
     private IEnumerator _invisibleDelayCache;
 
     private Vector3 _moveForce;
-
     private Vector3 _jumpForce;
 
     private Rigidbody _ballRb;
-
     private Collider _ballSc;
 
     private bool _isPressed;
-
     private float _angle;
 
-    // Name
     [field: SerializeField]
     public PlayerName ItemName { get; private set; }
 
-    // Motion
-    [Space(15)]
-
-    [SerializeField]
-    private float moveSpeed;
-
+    [Header("MOTION"), Space(15)]
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float maxJumpLimit = 50f;
-
     [SerializeField] private float bounceForce;
 
-    // Tilting
-    [Space(15)]
-
-    [SerializeField, Tooltip("Check this if the player-item is required to tilt")]
-    private bool shouldTilt;
-
+    [Header("TILTING"), Space(15), Tooltip("Check this if the player-item is required to tilt")]
+    [SerializeField] private bool shouldTilt;
     [SerializeField] private float tiltAngle = 45f;
-
     [SerializeField] private float tiltSpeed = 8f;
 
-    // Particle Fx
-    [Space(10)]
-
-    [SerializeField]
-    private ParticleSystem respawnFx;
-
+    [Header("PARTICLE FX"), Space(10)]
+    [SerializeField] private ParticleSystem respawnFx;
     [SerializeField] private ParticleSystem dustTrail;
 
-    // SoundFx
-    [Space(10)]
-
-    [SerializeField]
-    private AudioClip trailSfx;
-
+    [Header("SOUND FX"), Space(10)]
+    [SerializeField] private AudioClip trailSfx;
     [SerializeField] private AudioClip overboardSfx;
 
     private void Awake()
@@ -151,7 +129,7 @@ internal class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, tilt, Time.deltaTime * tiltSpeed);
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
             _isPressed = true;
     }
 

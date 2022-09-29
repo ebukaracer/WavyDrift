@@ -4,6 +4,7 @@ using Racer.SaveSystem;
 using Racer.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles certain stuffs relating to the game's main-menu UI.
@@ -13,21 +14,15 @@ internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
     public UITween UITween { get; private set; }
 
     public int CoinsCount { get; private set; }
-
     public int DiamondCount { get; private set; }
-
     public int BestCount { get; private set; }
 
     private bool _hasValidatedUser;
 
-    [Header("Texts")]
-
+    [Header("TEXTS")]
     [SerializeField] private TextMeshProUGUI coinT;
-
     [SerializeField] private TextMeshProUGUI diamondT;
-
     [SerializeField] private TextMeshProUGUI bestT;
-
     [SerializeField] private TextMeshProUGUI infoTipT;
 
 
@@ -44,7 +39,6 @@ internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
 
     private void Start()
     {
-
         if (!_hasValidatedUser)
             ShowInfoTip("Hey welcome!\nVisit the help section for a brief overview :-)");
     }
@@ -56,7 +50,6 @@ internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
     {
         CoinsCount = SaveSystem.GetData<int>("TotalCoins");
         coinT.SetText("{0}", CoinsCount);
-
 
         DiamondCount = SaveSystem.GetData<int>("Diamond");
         diamondT.SetText("{0}", DiamondCount);
@@ -133,8 +126,9 @@ internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
 
         SaveManager.ClearAllPrefs();
 
-#if UNITY_ANDROID && !UNITY_EDITOR
         // Restarts application when a save-file is deleted, so as to apply changes.
+        // TODO
+#if UNITY_ANDROID && !UNITY_EDITOR
         RestartAndroid.Restart();
 #endif
     }

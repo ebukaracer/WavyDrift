@@ -5,23 +5,21 @@ using UnityEngine;
 
 internal class ObstaclesSpawner : MultipleSpawner
 {
-    private PoolObject _spawnedPoolObj;
+    private int _startOffset;
+    private int _index;
+    private int _randomNum;
 
+    private PoolObject _spawnedPoolObj;
     private Transform _player;
 
-    private float _startPos;
+    [SerializeField] private Pool[] damageablePrefabs;
+    [SerializeField] private Pool[] boundaryPrefabs;
 
-    [SerializeField] private Pool[] boundaryPrefab;
-
-    [SerializeField] private int boundarySpawnAmount;
-
-    [Space(15), SerializeField] private Pool[] damageablePrefabs;
-
-    [Space(10), SerializeField] private float yRange;
-
-    [SerializeField] private float zSpacing;
-
-    [Space(10), SerializeField] private int autoDestroyLimit;
+    [Space(5), Header("PLATFORM PROPERTIES")]
+    [SerializeField] private int boundarySpawnAmount = 15;
+    [SerializeField] private float yRange = 10;
+    [SerializeField] private int zSpacing = 15;
+    [SerializeField] private int autoDestroyLimit = 300;
 
 
     private void Start()
@@ -34,28 +32,26 @@ internal class ObstaclesSpawner : MultipleSpawner
 
     private void SpawnObstacle()
     {
-        int index = 0;
+        _index = 0;
 
-        int randomNum = Random.Range(1, 4);
+        _randomNum = Random.Range(1, 4);
 
-
-        while (index < boundarySpawnAmount)
+        while (_index < boundarySpawnAmount)
         {
-            float yPos = Random.Range(-yRange, yRange);
+            var yPos = Random.Range(-yRange, yRange);
 
-            var clone = RandomSpawn(boundaryPrefab,
-                new Vector3(0, yPos, transform.position.z + _startPos));
+            var clone = RandomSpawn(boundaryPrefabs,
+                new Vector3(0, yPos, transform.position.z + _startOffset));
 
-            if (index % randomNum == 0)
+            if (_index % _randomNum == 0)
                 SpawnCollectibles(new Vector3(0, yPos, clone.transform.position.z + 10f));
 
-            index++;
+            _index++;
 
-            _startPos += Random.Range(zSpacing, maxInclusive: zSpacing + 5);
+            _startOffset += Random.Range(zSpacing, zSpacing + 5);
         }
 
-
-        _startPos = 0;
+        _startOffset = 0;
     }
 
 
@@ -85,7 +81,7 @@ internal class ObstaclesSpawner : MultipleSpawner
 
     private void SpawnCoins(Vector3 pos)
     {
-        var rot = Quaternion.Euler(0f, Random.Range(15f, maxInclusive: 60f), 0f);
+        var rot = Quaternion.Euler(0f, Random.Range(15f, 60f), 0f);
 
         Spawn(0, pos, rot);
     }
@@ -98,11 +94,7 @@ internal class ObstaclesSpawner : MultipleSpawner
     private void SpawnCoinMagnet(Vector3 pos)
     {
         if (ItemManager.Instance.CollectibleItem.GetItemByIndex(1).IsUnlocked)
-        {
-            // LogConsole.Log("Spawned coin magnet!");
-
             CloneCollectibles(2, pos);
-        }
         else
             SpawnCoins(pos);
     }
@@ -110,11 +102,7 @@ internal class ObstaclesSpawner : MultipleSpawner
     private void SpawnGhost(Vector3 pos)
     {
         if (ItemManager.Instance.CollectibleItem.GetItemByIndex(2).IsUnlocked)
-        {
-            // LogConsole.Log("Spawned ghost!");
-
             CloneCollectibles(3, pos);
-        }
         else
             SpawnCoins(pos);
     }
@@ -170,7 +158,7 @@ internal class ObstaclesSpawner : MultipleSpawner
 
         Despawn(damageablePrefabs, 0);
 
-        Despawn(boundaryPrefab, 0);
+        Despawn(boundaryPrefabs, 0);
     }
 
 

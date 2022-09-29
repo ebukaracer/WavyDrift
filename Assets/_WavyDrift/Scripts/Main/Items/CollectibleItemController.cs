@@ -1,4 +1,3 @@
-using System;
 using Racer.SaveSystem;
 using TMPro;
 using UnityEngine;
@@ -9,37 +8,21 @@ internal class CollectibleItemController : MonoBehaviour
     private int _collectibleCount;
 
     private ItemManager _itemManager;
-
     private CollectibleStore _currentlySelectedItem;
 
-    // Script References
-    [Header("Script ref")]
+    [Header("SCRIPT REFERENCES")]
+    [SerializeField] private PlayerItemController playerItemController;
 
-    [SerializeField]
-    private PlayerItemController playerItemController;
-
-    // Texts
-    [Header("Texts"), Space(10)]
-
-    [SerializeField]
-    private TextMeshProUGUI descriptionT;
-
+    [Header("TEXTS"), Space(10)]
+    [SerializeField] private TextMeshProUGUI descriptionT;
     [SerializeField] private TextMeshProUGUI priceT;
-
     [SerializeField] private TextMeshProUGUI currentLevelT;
 
-    // Images
-    [Header("Images"), Space(10)]
+    [Header("IMAGES"), Space(10)]
+    [SerializeField] private Image priceTokenI;
 
-    [SerializeField]
-    private Image priceTokenI;
-
-    // Buttons
-    [Header("Buttons"), Space(10)]
-
-    [SerializeField]
-    private Button upgradeB;
-
+    [Header("BUTTONS"), Space(10)]
+    [SerializeField] private Button upgradeB;
     [SerializeField] private Button[] collectibleBtns;
 
 
@@ -48,7 +31,6 @@ internal class CollectibleItemController : MonoBehaviour
         _itemManager = ItemManager.Instance;
 
         _collectibleCount = _itemManager.CollectibleItem.GetItemCount;
-
 
         upgradeB.onClick.AddListener(UpgradeItem);
 
@@ -64,7 +46,6 @@ internal class CollectibleItemController : MonoBehaviour
     /// <returns>CollectibleItem</returns>
     private CollectibleStore GetCollectible(int i) =>
         _itemManager.CollectibleItem.GetItemByIndex(i);
-
 
 
     /// <summary>
@@ -170,7 +151,7 @@ internal class CollectibleItemController : MonoBehaviour
         for (int i = 0; i < _collectibleCount; i++)
         {
             collectibleBtns[i].interactable =
-                GetCollectible(i).IsUnlocked = 
+                GetCollectible(i).IsUnlocked =
                 _itemManager.PlayerItem.GetItemByIndex(i + 2).IsPurchased;
         }
     }

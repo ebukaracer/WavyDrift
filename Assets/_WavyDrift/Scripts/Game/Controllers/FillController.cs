@@ -10,8 +10,9 @@ internal class FillController : SingletonPattern.Singleton<FillController>
 {
     [SerializeField] private CameraController cameraController;
 
-    // UI Fill-Bars available
-    [field: SerializeField, Space(10)]
+    [field: SerializeField,
+    Header("UI FILL-BARS PRESENT"), 
+    Space(10)]
     public FillBar CoinMagnetFill { get; private set; }
 
     [field: SerializeField]

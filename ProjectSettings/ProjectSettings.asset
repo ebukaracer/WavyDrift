@@ -694,7 +694,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: 
+    1: '!ENABLE_LOG;!ENABLE_LOG_WARNING;!ENABLE_LOG_ERROR'
     7: '!ENABLE_LOG;!ENABLE_LOG_WARNING;!ENABLE_LOG_ERROR'
     13: UNITY_POST_PROCESSING_STACK_V2
     14: UNITY_POST_PROCESSING_STACK_V2

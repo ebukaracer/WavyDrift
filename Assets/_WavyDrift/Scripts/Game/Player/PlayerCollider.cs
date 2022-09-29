@@ -12,20 +12,13 @@ internal class PlayerCollider : MonoBehaviour
     private int _multiplier = 1;
 
     private PlayerMovement _playerMovement;
-
     private Collectible _collectible;
-
-    // A kind of collectible
     private Damageable _damageable;
 
-    // PoolObject poolObject;
-
     private FillController _fillController;
-
     private ShardFxController _shardFxController;
 
     [SerializeField] private AudioClip collectibleClip;
-
 
 
     private void Start()
@@ -33,7 +26,6 @@ internal class PlayerCollider : MonoBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
 
         _fillController = FillController.Instance;
-
         _shardFxController = ShardFxController.Instance;
 
         _fillController.GhostFill.OnDecreaseStarted += GhostFill_OnDecreaseStarted;
@@ -88,14 +80,15 @@ internal class PlayerCollider : MonoBehaviour
             switch (_damageable.damageableType)
             {
                 case DamageableType.Danger:
-                    _fillController.DangerFill.DecreaseTime = Random.Range(5, maxInclusive: 8);
+                    if (_fillController.DangerFill.IsRoutineBusy) return;
+                    _fillController.DangerFill.DecreaseTime = Random.Range(5, 9);
                     _fillController.DangerFill.DecreaseFill();
                     // Extra Logic
                     break;
                 case DamageableType.Asteroid:
                     StartCoroutine(Utility.CameraMain.transform.Shake
-                        (Random.Range(.5f, maxInclusive: 1f),
-                        Random.Range(2f, maxInclusive: 4f)));
+                        (Random.Range(.5f, 1f),
+                        Random.Range(2f, 4f)));
                     // Extra Logic
                     break;
             }
@@ -133,7 +126,7 @@ internal class PlayerCollider : MonoBehaviour
         _playerMovement.Init(_fillController.GhostFill.DecreaseTime);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _fillController.GhostFill.OnDecreaseStarted -= GhostFill_OnDecreaseStarted;
     }

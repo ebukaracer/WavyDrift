@@ -12,7 +12,6 @@ internal class FillBar : MonoBehaviour
 
     private IEnumerator _startDecreaseCache;
 
-
     [field: SerializeField]
     public float DecreaseTime { get; set; }
 
@@ -50,6 +49,8 @@ internal class FillBar : MonoBehaviour
         // Before decreasing, notify listeners
         OnDecreaseStarted?.Invoke();
 
+        IsRoutineBusy = true;
+
         _fill.fillAmount = 1f;
 
         var end = Time.time + DecreaseTime;
@@ -69,9 +70,12 @@ internal class FillBar : MonoBehaviour
 
         // After decreasing, notify listeners
         OnDecreaseFinished?.Invoke();
+
+        IsRoutineBusy = false;
     }
 
-
     public bool IsStopRoutine { get; set; }
+
+    public bool IsRoutineBusy { get; set; }
 }
 

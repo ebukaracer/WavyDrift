@@ -9,6 +9,7 @@ internal class PlayerController : SingletonPattern.StaticInstance<PlayerControll
     private GameObject _playerToUse;
 
     public PlayerMovement PlayerMovement { get; private set; }
+    public PlayerCollider PlayerCollider => PlayerMovement.GetComponent<PlayerCollider>();
 
     protected override void Awake()
     {

@@ -12,49 +12,35 @@ using DG.Tweening;
 /// </summary>
 internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
 {
-    // Class Fields
     private Animator _animator;
-
     private ItemManager _itemManager;
 
     private int _scoreCount;
-
     private int _diamondCount;
-
     private int _diamondRespawnCount = 1;
-
     private int _coinCount;
-
     private int _best;
-
     private int _totalCoins;
 
     public bool HasGhostPortion { get; private set; }
-
     public bool HasCoinMagnet { get; private set; }
 
-
-    // Inspector Fields
-    [Header("Texts"), SerializeField] private TextMeshProUGUI scoreT;
-
+    [Header("TEXTS"),
+     SerializeField]
+    private TextMeshProUGUI scoreT;
     [SerializeField] private TextMeshProUGUI coinT;
-
     [SerializeField] private TextMeshProUGUI diamondT;
-
     [SerializeField] private TextMeshProUGUI diamondRespawnT;
-
     [SerializeField] private TextMeshProUGUI bestT;
 
-    [Header("Images"), Space(10),]
-
+    [Header("IMAGES"), Space(10)]
     [SerializeField] private Image pauseResumeI;
 
     [Space(5), SerializeField] private Image[] collectibleTopImages;
-
     [Space(5), SerializeField] private Sprite[] pauseResumeSprites;
 
+    [Header("OTHERS")]
     [Space(5), SerializeField] private AudioClip triggerClip;
-
     [Space(5), SerializeField] private CanvasGroup scoreCg;
 
 
@@ -104,9 +90,7 @@ internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
     private void SaveOnGameOver()
     {
         SaveSystem.SaveData("TotalCoins", _totalCoins + _coinCount);
-
         SaveSystem.SaveData("BestScore", SetBest);
-
         SaveSystem.SaveData("Diamond", _diamondCount);
     }
 
@@ -129,6 +113,7 @@ internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
             case GameStates.GameOver:
                 SaveOnGameOver();
                 bestT.SetText("{0}", SetBest);
+                scoreCg.alpha = 1f;
                 break;
 
             case GameStates.DestroyWait:
@@ -203,8 +188,6 @@ internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
         scoreCg.DOFade(0f, .5f);
     }
 
-
-
     /// <summary>
     /// Re-spawns player with diamond if they have enough.
     /// </summary>
@@ -275,9 +258,9 @@ internal class UIControllerGame : SingletonPattern.Singleton<UIControllerGame>
         GameManager.Instance.FadeInMusic();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        // Unregister callbacks
+        // UnSubscription
         GameManager.OnCurrentState -= GameManager_OnCurrentState;
     }
 }

@@ -25,18 +25,13 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
 {
     // Private fields dependencies
     private BrokenPlayerController _brokenPlayerController;
-
     private PlayerController _playerController;
-
     private SoundManager _soundManager;
-
     private AudioSource _musicSource;
 
     private bool _isMusicSrcEnabled;
 
-
     public static event Action<GameStates> OnCurrentState;
-
 
     // For Visualization purpose only
     [field: SerializeField]
@@ -45,7 +40,6 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
     [field: SerializeField]
     public float StartDelay { get; private set; }
 
-
     // Other fields
     [Space(10), SerializeField] private AudioClip uiSfx;
 
@@ -53,19 +47,13 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
 
     private void Start()
     {
-        // Player
         _playerController = PlayerController.Instance;
-
         _brokenPlayerController = BrokenPlayerController.Instance;
-
-        // Sound
         _soundManager = SoundManager.Instance;
 
         _musicSource = _soundManager.GetMusic();
-
         _isMusicSrcEnabled = _musicSource.enabled;
 
-        // State
         SetGameState(GameStates.Loading);
 
         StartCoroutine(CountDown(StartDelay));
@@ -100,7 +88,7 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
 
         CurrentState = state;
 
-        // Updates other scripts listening to the game's current state
+        // Update other scripts listening to the game's current state
         OnCurrentState?.Invoke(state);
     }
 
@@ -140,8 +128,9 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
         _soundManager.PlaySfx(uiSfx);
 
         // Initialize a broken-player counterpart
-        _brokenPlayerController.BrokenPlayer.InitializeOnStartup(_playerController.PlayerMovement.gameObject.transform.position,
-                                                       _playerController.PlayerMovement.gameObject.transform.rotation);
+        var playerMovementTransform = _playerController.PlayerMovement.transform;
+        _brokenPlayerController.BrokenPlayer.InitializeOnStartup(playerMovementTransform.position,
+                                                       playerMovementTransform.rotation);
     }
 
     /// <summary>
@@ -187,8 +176,6 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
     {
         if (_isMusicSrcEnabled)
             _soundManager.GetSnapShot(1).TransitionTo(.1f);
-
-        // Other logic
     }
 
     /// <summary>
@@ -199,8 +186,6 @@ internal class GameManager : SingletonPattern.Singleton<GameManager>
     {
         if (_isMusicSrcEnabled)
             _soundManager.GetSnapShot(2).TransitionTo(.1f);
-
-        // Other logic
     }
 
     /// <summary>

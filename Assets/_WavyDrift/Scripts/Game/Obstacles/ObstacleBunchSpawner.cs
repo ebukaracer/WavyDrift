@@ -12,18 +12,9 @@ internal class ObstacleBunchSpawner : MultipleSpawner
 
     private void Start()
     {
-        _maxSpawnCount = Pools.Length - 2;
-
-        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jet).IsPurchased)
-        {
-            _maxSpawnCount = Pools.Length - 1;
-        }
-        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jetpackboy).IsPurchased)
-        {
-            _maxSpawnCount = Pools.Length;
-        }
-
+        _maxSpawnCount = GetSpawnCount();
     }
+
     public void PoolObstacleBunch()
     {
         var poolObj = Spawn(Random.Range(0, _maxSpawnCount),
@@ -33,5 +24,16 @@ internal class ObstacleBunchSpawner : MultipleSpawner
         poolObj.GetComponent<ObstaclesSpawner>().StartAutoDestroy();
 
         initialSpawnPos += NextSpawnPos;
+    }
+
+    private int GetSpawnCount()
+    {
+        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jetpackboy).IsPurchased)
+            return Pools.Length;
+
+        if (ItemManager.Instance.PlayerItem.GetItemByName(PlayerName.Jet).IsPurchased)
+            return Pools.Length - 1;
+
+        return Pools.Length - 2;
     }
 }

@@ -12,12 +12,14 @@ internal enum CollectibleName
 [CreateAssetMenu(fileName = "Collectible_0", menuName = "Collectible")]
 internal class CollectibleStore : ScriptableObject
 {
+    // Details
     [SerializeField] private int id;
 
     [SerializeField] private CollectibleName title;
 
     [SerializeField, Multiline] private string description;
 
+    // Price
     [field: SerializeField, Space(10)]
     public int LevelPrice { get; set; }
 
@@ -26,6 +28,7 @@ internal class CollectibleStore : ScriptableObject
 
     [SerializeField] private int perLevelPrice;
 
+    // Properties
     /// <summary>
     /// The item's current level as it gets upgraded.
     /// </summary>
@@ -33,7 +36,6 @@ internal class CollectibleStore : ScriptableObject
     public int LevelIndex { get; set; }
 
     [SerializeField] private int maxLevelIndex;
-
 
     [SerializeField, Space(10)] private int perResourceValue;
 
@@ -46,7 +48,6 @@ internal class CollectibleStore : ScriptableObject
 
     [SerializeField, Tooltip("Accepts same value as resource value.")]
     private int resourceValueCache;
-
 
     [field: SerializeField, Space(10)]
     public bool IsUnlocked { get; set; }

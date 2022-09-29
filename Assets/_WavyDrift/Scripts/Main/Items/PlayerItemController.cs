@@ -7,50 +7,36 @@ using UnityEngine.UI;
 internal class PlayerItemController : MonoBehaviour
 {
     private int _pageIndex;
-
     private int _itemCount;
 
     private ItemManager _itemManager;
-
     private PlayerStore _currentlySelectedItem;
-
     private UIControllerMain _uiControllerMain;
 
     public event Action OnHasPurchasedItem;
 
-    [Header("Images")]
+    [Header("IMAGES")]
+    [SerializeField] private Image currentItemSprite;
 
-    [SerializeField]
-    private Image currentItemSprite;
-
-    // Coins/Diamonds
+    // For -> Coins/Diamonds
     [SerializeField] private Image unlockToken;
-
     [SerializeField] private Sprite unlockPadlock;
-
     [SerializeField] private Sprite usingCheckmark;
 
-    [Header("Texts"), Space(10)]
-
+    [Header("TEXTS"), Space(10)]
     [SerializeField] private TextMeshProUGUI currentItemTokenAmtT;
-
     [SerializeField] private TextMeshProUGUI currentItemDescriptionT;
-
     [SerializeField] private TextMeshProUGUI currentItemNameT;
-
     [SerializeField] private TextMeshProUGUI equipT;
 
     private void Start()
     {
         _itemManager = ItemManager.Instance;
-
         _uiControllerMain = UIControllerMain.Instance;
-
 
         _itemCount = _itemManager.PlayerItem.GetItemCount;
 
         SetRetrievedItemProperties(GetPlayer(_pageIndex));
-
         AvailableItemNotify();
     }
 

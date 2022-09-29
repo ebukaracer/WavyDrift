@@ -6,9 +6,8 @@ using UnityEngine;
 /// </summary>
 internal class ShardFxController : SingletonPattern.Singleton<ShardFxController>
 {
-    private ParticleSystemRenderer _psRenderer;
-
     private ParticleSystem _particleSystem;
+    private ParticleSystemRenderer _psRenderer;
 
     [SerializeField, Tooltip("Mesh to assign to the particle system's renderer")]
     private Mesh shield, danger, asteroid, coinMagnet, coin, diamond;
