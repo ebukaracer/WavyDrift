@@ -7,9 +7,10 @@
 - Save System
 - Audio Manager
 - InGame Shop
+- Post-Processing
 
 ## Download:
-Download the Windows build [here]()
+`Working on it...`
 
 ## Notes:
-⚠ This `branch` isn't well optmized for mobile devices, since it's missing `object-pooling` for instantiating and destroying objects. Meanwhile, It can be played on windows, most likely all logic implemented [here](https://github.com/ebukaracer/WavyDrift) but `object-pooling` are also implemented here. 
+⚠ This `branch` isn't well optmized for android platform, since it's missing `object-pooling` for instantiating and destroying objects. Meanwhile, It can be played on windows or webgl platform, most likely all logic implemented [here](https://github.com/ebukaracer/WavyDrift) but `object-pooling` are also implemented here. 
