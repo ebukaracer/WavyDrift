@@ -21,6 +21,13 @@ namespace Racer.SaveSystem
         // Checks if the contents has been loaded previously instead of reloading every time.
         private static bool _hasLoaded;
 
+        // Short-hand way of accessing the static methods in (SavePaths.cs)
+        private static string _saveDir = SavePaths.SaveDirectoryPath;
+        private static string _saveFile = SavePaths.SaveFilePath;
+        private static string _saveFileMeta = SavePaths.SaveFileMetaPath;
+
+
+
         /// <summary>
         /// Saves in a value (to the save-file) marked with the key provided.
         /// </summary>
@@ -30,8 +37,6 @@ namespace Racer.SaveSystem
         public static void SaveData<T>(string key, T data)
         {
             _dataValues.AddValue(key, data);
-
-            Save();
         }
 
         /// <summary>
@@ -116,15 +121,13 @@ namespace Racer.SaveSystem
                     return;
                 }
 
-                string saveFile = SavePaths.SaveFilePath;
-
-                string contents = File.ReadAllText(saveFile);
+                var contents = File.ReadAllText(_saveFile);
 
                 if (string.IsNullOrEmpty(contents))
                 {
                     Save();
 
-                    contents = File.ReadAllText(saveFile);
+                    contents = File.ReadAllText(_saveFile);
                 }
 
                 _dataValues = JsonConvert.DeserializeObject<DataValues>(contents, new CustomConverter());
@@ -141,23 +144,20 @@ namespace Racer.SaveSystem
             // Swift if save-file/directory  already exits.
             static bool InitSaveDirAndFile()
             {
-                string saveDir = SavePaths.SaveDirectoryPath;
-
-                string saveFile = SavePaths.SaveFilePath;
-
                 try
                 {
-                    if (!Directory.Exists(saveDir))
-                        Directory.CreateDirectory(saveDir);
+                    if (!Directory.Exists(_saveDir))
+                        Directory.CreateDirectory(_saveDir);
 
-                    if (File.Exists(saveFile)) return true;
+                    if (File.Exists(_saveFile)) return true;
 
                     // Refactor from (unity version >= 2021)
-                    using (var fs = File.Create(saveFile)) { }
+                    using (var fs = File.Create(_saveFile)) { }
 
-                    Logging.Log($"<b>{SavePaths.SaveFileName}</b> was successfully created at <b>{saveFile}</b>.");
+                    Logging.Log($"<b>{SavePaths.SaveFileName}</b> was successfully created at <b>{_saveFile}</b>.");
 #if UNITY_EDITOR
-                    AssetDatabase.Refresh();
+                    if (!UnityEngine.Application.isPlaying)
+                        AssetDatabase.Refresh();
 #endif
                     return true;
                 }
@@ -170,35 +170,30 @@ namespace Racer.SaveSystem
             }
         }
 
-
-#if UNITY_EDITOR
         /// <summary>
         /// Handles the actual creation of save-file and it's directory in the editor.
         /// </summary>
+#if UNITY_EDITOR
         public static void CreateSaveDirAndFile(bool overwriteSaveFile)
         {
-            string saveDir = SavePaths.SaveDirectoryPath;
-
-            string saveFile = SavePaths.SaveFilePath;
-
             try
             {
                 // Creates a save-directory
-                if (!Directory.Exists(saveDir))
-                    Directory.CreateDirectory(saveDir);
+                if (!Directory.Exists(_saveDir))
+                    Directory.CreateDirectory(_saveDir);
 
 
                 // Creates or overwrites an existing save-file
-                if (File.Exists(saveFile))
+                if (File.Exists(_saveFile))
                 {
                     if (overwriteSaveFile)
-                        CreateFile($"<b>{SavePaths.SaveFileName}</b> was successfully overwritten <b>{saveFile}</b>.");
+                        CreateFile($"<b>{SavePaths.SaveFileName}</b> was successfully overwritten <b>{_saveFile}</b>.");
                     else
                         Logging.LogWarning($"A <b>{SavePaths.SaveFileName}</b> was previously created. " +
                         $"You may toggle <b>overwrite</b> if you want to overwrite the file instead.");
                 }
                 else
-                    CreateFile($"<b>{SavePaths.SaveFileName}</b> was successfully created at <b>{saveFile}</b>.");
+                    CreateFile($"<b>{SavePaths.SaveFileName}</b> was successfully created at <b>{_saveFile}</b>.");
             }
 
             catch (Exception ex)
@@ -208,12 +203,15 @@ namespace Racer.SaveSystem
 
             void CreateFile(object msg)
             {
-                // Refactor from (unity version >= 2021)
-                using (var fs = File.Create(saveFile)) { }
-
+#if UNITY_2021_1_OR_NEWER
+                using var fs = File.Create(_saveFile);
+#else
+                using (var fs = File.Create(_saveFile)) { }
+#endif
                 Logging.Log(msg);
 
-                AssetDatabase.Refresh();
+                if (!UnityEngine.Application.isPlaying)
+                    AssetDatabase.Refresh();
             }
         }
 #endif
@@ -223,30 +221,27 @@ namespace Racer.SaveSystem
         /// </summary>
         public static void DeleteSaveFile()
         {
-            string saveFile = SavePaths.SaveFilePath;
-
-            string saveFileMeta = SavePaths.SaveFileMetaPath;
-
             try
             {
-                if (!File.Exists(saveFile))
+                if (!File.Exists(_saveFile))
                 {
                     Logging.LogWarning($"No save-file found to delete!");
 
                     return;
                 }
 
-                File.Delete(saveFile);
+                File.Delete(_saveFile);
+
+                if (!string.IsNullOrEmpty(_saveFileMeta))
+                    File.Delete(_saveFileMeta);
 
                 _dataValues.KeyValues.Clear();
-
-                if (!string.IsNullOrEmpty(saveFileMeta))
-                    File.Delete(saveFileMeta);
 
                 Logging.Log($"<b>{SavePaths.SaveFileName}</b> was successfully deleted.");
 
 #if UNITY_EDITOR
-                AssetDatabase.Refresh();
+                if (!UnityEngine.Application.isPlaying)
+                    AssetDatabase.Refresh();
 #endif
             }
 

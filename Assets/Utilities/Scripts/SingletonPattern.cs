@@ -2,9 +2,9 @@
 
 namespace Racer.Utilities
 {
-    public sealed class SingletonPattern
+    public class SingletonPattern
     {
-        SingletonPattern() { }
+        private SingletonPattern() { }
 
         /// <summary>
         /// A static instance is similar to a singleton, but instead of destroying any new instances,
@@ -15,16 +15,6 @@ namespace Racer.Utilities
             public static T Instance { get; private set; }
 
             protected virtual void Awake() => Instance = this as T;
-
-            /* This should be called last.
-            private void OnApplicationQuit()
-            {
-                Debug.Log("Destroyed Instance!");
-                Instance = null;
-
-                Destroy(gameObject);
-            }
-            */
         }
 
         /// <summary>
