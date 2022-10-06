@@ -10,7 +10,7 @@
 * Unity 2020.3.10f1 
 * Visual Studio (IDE)
 * C# (Language)
-* My [Custom Packages](https://github.com/ebukaracer/Custom_Packages/tree/main)
+* My [Major Packages](https://github.com/ebukaracer/Major_Packages/tree/main)
 
 ## Features:
 - Object Pooling

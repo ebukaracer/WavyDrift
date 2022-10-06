@@ -4,7 +4,6 @@ using Racer.SaveSystem;
 using Racer.Utilities;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles certain stuffs relating to the game's main-menu UI.
@@ -127,10 +126,7 @@ internal class UIControllerMain : SingletonPattern.Singleton<UIControllerMain>
         SaveManager.ClearAllPrefs();
 
         // Restarts application when a save-file is deleted, so as to apply changes.
-        // TODO
-#if UNITY_ANDROID && !UNITY_EDITOR
-        RestartAndroid.Restart();
-#endif
+        LoadManager.Instance.LoadSceneAsync(0);
     }
 
     /// <summary>
