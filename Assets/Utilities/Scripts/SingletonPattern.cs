@@ -41,7 +41,11 @@ namespace Racer.Utilities
             {
                 base.Awake();
 
-                DontDestroyOnLoad(gameObject);
+                var go = gameObject;
+
+                go.transform.parent = null;
+
+                DontDestroyOnLoad(go);
             }
         }
     }

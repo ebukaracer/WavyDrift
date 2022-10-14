@@ -90,7 +90,7 @@ namespace Racer.SaveSystem
         /// loading into a new scene or when your app looses focus.
         /// See: <see cref="SavePoint"/>.
         /// </remarks>
-        public static void Save()
+        internal static void Save()
         {
             var contents = JsonConvert.SerializeObject(_dataValues, Formatting.Indented);
 
@@ -110,7 +110,7 @@ namespace Racer.SaveSystem
         /// initializes the content(s) of the data-value container to,
         /// empty strings.
         /// </remarks>
-        public static void Load()
+        internal static void Load()
         {
             try
             {
@@ -142,7 +142,7 @@ namespace Racer.SaveSystem
 
             // Creates a new save-file and directory.
             // Swift if save-file/directory  already exits.
-            static bool InitSaveDirAndFile()
+            bool InitSaveDirAndFile()
             {
                 try
                 {
@@ -152,7 +152,7 @@ namespace Racer.SaveSystem
                     if (File.Exists(_saveFile)) return true;
 
                     // Refactor from (unity version >= 2021)
-                    using (var fs = File.Create(_saveFile)) { }
+                    using (File.Create(_saveFile)) { }
 
                     Logging.Log($"<b>{SavePaths.SaveFileName}</b> was successfully created at <b>{_saveFile}</b>.");
 #if UNITY_EDITOR
@@ -174,7 +174,7 @@ namespace Racer.SaveSystem
         /// Handles the actual creation of save-file and it's directory in the editor.
         /// </summary>
 #if UNITY_EDITOR
-        public static void CreateSaveDirAndFile(bool overwriteSaveFile)
+        internal static void CreateSaveDirAndFile(bool overwriteSaveFile)
         {
             try
             {

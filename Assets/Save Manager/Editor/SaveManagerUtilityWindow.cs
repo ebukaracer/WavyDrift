@@ -27,14 +27,20 @@ namespace Racer.SaveManager
 
         private void OnGUI()
         {
+#if UNITY_2019_1_OR_NEWER
             EditorGUILayout.Space(10);
-
+#else
+            EditorGUILayout.Space();
+#endif
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(Width));
             EditorGUILayout.HelpBox("Input multiple keys by separating with comma(,)", MessageType.Info);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space(5);
-
+#if UNITY_2019_1_OR_NEWER
+            EditorGUILayout.Space(10);
+#else
+            EditorGUILayout.Space();
+#endif
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
             EditorGUILayout.BeginHorizontal(GUILayout.Width(Width - 5));
@@ -54,16 +60,22 @@ namespace Racer.SaveManager
             }
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space(15);
-
+#if UNITY_2019_1_OR_NEWER
+            EditorGUILayout.Space(10);
+#else
+            EditorGUILayout.Space();
+#endif
             GUILayout.Label("Other Settings", EditorStyles.boldLabel);
 
             EditorGUILayout.HelpBox("This would delete all data present in the save-profile.", MessageType.Info);
             if (GUILayout.Button(new GUIContent("Erase all values", "Deletes all values from save profile.")))
                 SaveUtility.EraseAllValues();
 
-            EditorGUILayout.Space(15);
-
+#if UNITY_2019_1_OR_NEWER
+            EditorGUILayout.Space(10);
+#else
+            EditorGUILayout.Space();
+#endif
             EditorGUILayout.HelpBox("Whether or not to preserve the Inputted Key-Value(s) every time this Window is opened.", MessageType.Info);
             _shouldRetain = EditorGUILayout.Toggle("Retain Key Input(s)", _shouldRetain, GUILayout.MaxWidth(Width / 4));
         }

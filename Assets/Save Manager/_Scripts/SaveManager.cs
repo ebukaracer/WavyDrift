@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Racer.SaveManager
 {
     /// <summary>
-    /// Encapsulates the different ways of saving and loading a value from player preferences.
+    /// Encapsulates the different ways of saving and loading values from player preferences.
     /// </summary>
     public class SaveManager : MonoBehaviour
     {

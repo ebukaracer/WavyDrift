@@ -45,8 +45,11 @@ namespace Racer.SaveSystem
 
         private void OnGUI()
         {
+#if UNITY_2019_1_OR_NEWER
             EditorGUILayout.Space(10);
-
+#else
+            EditorGUILayout.Space();
+#endif
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(Width));
 
             EditorGUILayout.HelpBox($"A default [{SavePaths.SaveFileName}] would be created at the following directory: [{PathTemplate}].\n" +
@@ -54,8 +57,11 @@ namespace Racer.SaveSystem
 
             EditorGUILayout.EndHorizontal();
 
+#if UNITY_2019_1_OR_NEWER
             EditorGUILayout.Space(5);
-
+#else
+            EditorGUILayout.Space();
+#endif
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
             if (GUILayout.Button(new GUIContent("Create New Save File", "Creates a new save file."), GUILayout.MaxWidth(Width)))
@@ -64,8 +70,11 @@ namespace Racer.SaveSystem
             if (GUILayout.Button(new GUIContent("Delete Save File", "Deletes the created save file"), GUILayout.MaxWidth(Width)))
                 SaveSystem.DeleteSaveFile();
 
+#if UNITY_2019_1_OR_NEWER
             EditorGUILayout.Space(15);
-
+#else
+            EditorGUILayout.Space();
+#endif
             GUILayout.Label("Other Settings", EditorStyles.boldLabel);
 
             EditorGUILayout.HelpBox($"Toggling [overwrite] would overwrite the previously created save-file during creation.", MessageType.Info);
