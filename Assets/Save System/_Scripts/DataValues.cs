@@ -16,7 +16,6 @@ namespace Racer.SaveSystem
 
         public void AddValue<T>(string key, T value)
         {
-            // TODO
             // If key already exists, overwrite the value
             if (ContainsKey(key))
                 KeyValues[key] = value;
@@ -29,7 +28,5 @@ namespace Racer.SaveSystem
         public bool ContainsKey(string key) => KeyValues.ContainsKey(key);
 
         public T GetValue<T>(string key) => (T)KeyValues[key];
-
-        //  public bool ContainsValue<T>(T value) => _keyValues.ContainsValue(value);
     }
 }
